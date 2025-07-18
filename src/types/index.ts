@@ -73,13 +73,19 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+// 카메라 모드 타입
+export type CameraMode = "orbit" | "first-person" | "top-down";
+
+// 에디터 모드 타입
+export type EditorMode = "select" | "move" | "rotate" | "scale" | "place";
+
 // UI 상태 타입
 export interface UIState {
   selectedObjectId: string | null;
   isEditing: boolean;
   showSidebar: boolean;
   showProperties: boolean;
-  cameraMode: "orbit" | "first-person" | "top-down";
+  cameraMode: CameraMode;
   gridVisible: boolean;
   snapToGrid: boolean;
 }
@@ -92,5 +98,23 @@ export interface EditorState {
     past: Object3D[][];
     future: Object3D[][];
   };
-  mode: "select" | "move" | "rotate" | "scale" | "place";
+  mode: EditorMode;
+}
+
+// 성능 최적화 관련 타입
+export interface PerformanceSettings {
+  enableShadows: boolean;
+  enableAntialiasing: boolean;
+  maxLights: number;
+  maxObjects: number;
+  quality: "low" | "medium" | "high";
+}
+
+// 렌더링 설정 타입
+export interface RenderSettings {
+  backgroundColor: string;
+  fogEnabled: boolean;
+  fogColor: string;
+  fogNear: number;
+  fogFar: number;
 }
