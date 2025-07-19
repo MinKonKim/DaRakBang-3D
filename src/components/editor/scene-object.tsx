@@ -1,13 +1,17 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { useThree, useFrame } from "@react-three/fiber";
-import { useEditorStore } from "@/store/useEditorStore";
-import { Object3D } from "@/types";
-import { Mesh, MeshStandardMaterial } from "three";
+import { useThree } from "@react-three/fiber";
+import { useEditorStore, type SceneObject } from "@/stores/editor-store";
+import {
+  Mesh,
+  MeshStandardMaterial,
+  DirectionalLight,
+  PointLight,
+} from "three";
 
 interface SceneObjectProps {
-  object: Object3D;
+  object: SceneObject;
 }
 
 export function SceneObject({ object }: SceneObjectProps) {
@@ -29,9 +33,9 @@ export function SceneObject({ object }: SceneObjectProps) {
     if (!meshRef.current) return;
 
     const mesh = meshRef.current;
-    const [x, y, z] = object.position;
-    const [rx, ry, rz] = object.rotation;
-    const [sx, sy, sz] = object.scale;
+    const [x, y, z] = object.transform.position;
+    const [rx, ry, rz] = object.transform.rotation;
+    const [sx, sy, sz] = object.transform.scale;
 
     mesh.position.set(x, y, z);
     mesh.rotation.set(rx, ry, rz);
@@ -49,6 +53,10 @@ export function SceneObject({ object }: SceneObjectProps) {
         }
         if (object.material.metalness !== undefined) {
           material.metalness = object.material.metalness;
+        }
+        if (object.material.opacity !== undefined) {
+          material.opacity = object.material.opacity;
+          material.transparent = object.material.opacity < 1;
         }
       }
     }
@@ -74,17 +82,47 @@ export function SceneObject({ object }: SceneObjectProps) {
   const renderGeometry = () => {
     switch (object.type) {
       case "cube":
-        return <boxGeometry args={[1, 1, 1]} />;
+        const cubeSize = object.geometry?.width || 1;
+        return (
+          <boxGeometry
+            args={[
+              cubeSize,
+              object.geometry?.height || cubeSize,
+              object.geometry?.depth || cubeSize,
+            ]}
+          />
+        );
       case "sphere":
-        return <sphereGeometry args={[0.5, 32, 32]} />;
-      case "cylinder":
-        return <cylinderGeometry args={[0.5, 0.5, 1, 32]} />;
+        return (
+          <sphereGeometry args={[object.geometry?.radius || 0.5, 32, 32]} />
+        );
       case "plane":
-        return <planeGeometry args={[1, 1]} />;
+        return (
+          <planeGeometry
+            args={[object.geometry?.width || 1, object.geometry?.height || 1]}
+          />
+        );
       default:
         return <boxGeometry args={[1, 1, 1]} />;
     }
   };
+
+  // 라이트 오브젝트 렌더링
+  if (object.type === "light") {
+    return (
+      <directionalLight
+        position={object.transform.position}
+        intensity={object.light?.intensity || 1}
+        color={object.light?.color || "#ffffff"}
+        castShadow
+      />
+    );
+  }
+
+  // 카메라 오브젝트는 3D 뷰에서 렌더링하지 않음
+  if (object.type === "camera") {
+    return null;
+  }
 
   return (
     <mesh ref={meshRef} onClick={handleClick} castShadow receiveShadow>
@@ -93,6 +131,10 @@ export function SceneObject({ object }: SceneObjectProps) {
         color={object.material?.color || "#888888"}
         roughness={object.material?.roughness || 0.5}
         metalness={object.material?.metalness || 0.1}
+        opacity={object.material?.opacity || 1}
+        transparent={
+          object.material?.opacity !== undefined && object.material.opacity < 1
+        }
       />
     </mesh>
   );

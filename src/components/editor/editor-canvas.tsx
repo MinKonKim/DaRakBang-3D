@@ -9,7 +9,7 @@ import { TestControls } from "./test-controls";
 
 export function EditorCanvas() {
   return (
-    <div className="w-[800px] h-[600px] relative">
+    <div className="w-full h-full relative">
       <Canvas
         camera={{
           position: [10, 10, 10],
