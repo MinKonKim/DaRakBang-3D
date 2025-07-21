@@ -43,4 +43,5 @@ next-env.d.ts
 # GEMINI
 GEMINI.md
 # Vscode
-/.vscode/*
+settings.json
+*.vscode/*
