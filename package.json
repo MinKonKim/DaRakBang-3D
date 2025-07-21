@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type gen": "npx supabase gen types typescript --project-id nehctmaehecfbjseqjma --schema public > src/shared/types/database-types.ts",
     "lint:fix": "next lint --fix",
     "postinstall": "node scripts/update-exports.js"
   },
@@ -43,6 +44,7 @@
     "@types/three": "^0.178.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
+    "supabase": ">=1.8.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
