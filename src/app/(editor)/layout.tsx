@@ -1,14 +1,13 @@
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
+import { SidebarProvider } from "@/components/ui"
 
 interface EditorLayoutProps {
   children: React.ReactNode
 }
 
-export default function EditorLayout({ children }: { children: React.ReactNode }) {
+export default function EditorLayout({ children }: EditorLayoutProps) {
   return (
-    <main>
-      {children}
-      <OrbitControls />
-    </main>
+    <SidebarProvider>
+      <main>{children}</main>
+    </SidebarProvider>
   )
 }
