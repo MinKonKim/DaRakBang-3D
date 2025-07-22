@@ -1,12 +1,12 @@
 "use client"
 
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Grid } from "@react-three/drei"
 import { ObjectWrapper } from "@/modules/objects/core/object-wrapper"
 import { useSceneObjects } from "@/modules/scene/hooks/use-scene-object"
-import { Box } from "../object/3d"
+import { Grid, OrbitControls } from "@react-three/drei"
+import { Canvas } from "@react-three/fiber"
 import { useEffect } from "react"
 import { Mesh } from "three"
+import { Box } from "../object/3d"
 
 export default function SceneCanvas() {
   const { objects, addObject, selectedId, selectObject } = useSceneObjects()

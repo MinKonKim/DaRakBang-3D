@@ -1,1 +1,1 @@
-export * from "./editor-scene"
+export { default as EditorSidebar } from "./editor-sidebar"
