@@ -1,8 +1,14 @@
 "use client";
 
+import { Button } from "@/components/ui";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const handleStartButtonClick =()=>{
+    router.push("/editor")
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="text-center">
@@ -15,12 +21,12 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 justify-center">
-          <Link
-            href="/editor"
+          <Button
+          onClick={handleStartButtonClick}
             className="px-8 py-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-lg font-semibold"
           >
             🎨 에디터 시작하기
-          </Link>
+          </Button>
 
           <button
             onClick={() => {

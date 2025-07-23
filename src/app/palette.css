@@ -1,0 +1,67 @@
+
+@layer base {
+  :root {
+    --primary-50: oklch(0.95 0.04 265);
+    --primary-100: oklch(0.92 0.07 265);
+    --primary-200: oklch(0.85 0.11 265);
+    --primary-300: oklch(0.78 0.14 265);
+    --primary-400: oklch(0.71 0.17 265);
+    --primary-500: oklch(0.65 0.19 265);
+    --primary-600: oklch(0.6 0.18 265); /* Main primary color */
+    --primary-700: oklch(0.54 0.16 265);
+    --primary-800: oklch(0.48 0.14 265);
+    --primary-900: oklch(0.42 0.12 265);
+    --primary-950: oklch(0.36 0.1 265);
+
+    --neutral-50: oklch(0.98 0.01 240);
+    --neutral-100: oklch(0.95 0.02 240);
+    --neutral-200: oklch(0.9 0.03 240);
+    --neutral-300: oklch(0.82 0.04 240);
+    --neutral-400: oklch(0.73 0.05 240);
+    --neutral-500: oklch(0.65 0.06 240);
+    --neutral-600: oklch(0.56 0.07 240);
+    --neutral-700: oklch(0.47 0.08 240);
+    --neutral-800: oklch(0.38 0.09 240);
+    --neutral-900: oklch(0.29 0.1 240);
+    --neutral-950: oklch(0.2 0.05 265);
+
+    /* Sea Green for Success/Positive states */
+    --success-50: oklch(0.95 0.04 155);
+    --success-100: oklch(0.92 0.07 155);
+    --success-200: oklch(0.85 0.11 155);
+    --success-300: oklch(0.78 0.14 155);
+    --success-400: oklch(0.71 0.17 155);
+    --success-500: oklch(0.7 0.15 155);
+    --success-600: oklch(0.65 0.14 155);
+    --success-700: oklch(0.58 0.12 155);
+    --success-800: oklch(0.51 0.1 155);
+    --success-900: oklch(0.44 0.09 155);
+    --success-950: oklch(0.3 0.08 155);
+
+    /* Amber for Warning/Attention states */
+    --warning-50: oklch(0.98 0.05 90);
+    --warning-100: oklch(0.96 0.08 90);
+    --warning-200: oklch(0.92 0.12 90);
+    --warning-300: oklch(0.88 0.15 90);
+    --warning-400: oklch(0.84 0.17 90);
+    --warning-500: oklch(0.8 0.18 90);
+    --warning-600: oklch(0.75 0.17 90);
+    --warning-700: oklch(0.69 0.16 90);
+    --warning-800: oklch(0.63 0.15 90);
+    --warning-900: oklch(0.56 0.14 90);
+    --warning-950: oklch(0.4 0.1 90);
+
+    /* Coral for Accent/Highlight states */
+    --accent-50: oklch(0.96 0.05 20);
+    --accent-100: oklch(0.93 0.08 20);
+    --accent-200: oklch(0.88 0.12 20);
+    --accent-300: oklch(0.83 0.14 20);
+    --accent-400: oklch(0.79 0.15 20);
+    --accent-500: oklch(0.75 0.16 20);
+    --accent-600: oklch(0.7 0.15 20);
+    --accent-700: oklch(0.64 0.14 20);
+    --accent-800: oklch(0.58 0.13 20);
+    --accent-900: oklch(0.51 0.12 20);
+    --accent-950: oklch(0.35 0.1 20);
+  }
+}
