@@ -22,8 +22,8 @@ export default function Home() {
 
         <div className="flex gap-4 justify-center">
           <Button
+          size="xl"
           onClick={handleStartButtonClick}
-            className="px-8 py-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-lg font-semibold"
           >
             🎨 에디터 시작하기
           </Button>
