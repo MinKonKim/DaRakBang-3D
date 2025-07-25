@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type gen": "npx supabase gen types typescript --project-id nehctmaehecfbjseqjma --schema public > src/shared/types/database-types.ts",
+    "supabase:gen": "npx supabase gen types typescript --project-id nehctmaehecfbjseqjma --schema public > src/shared/types/database-types.ts",
     "lint:fix": "next lint --fix",
     "postinstall": "node scripts/update-exports.js"
   },
