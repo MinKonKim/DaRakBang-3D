@@ -45,3 +45,5 @@ GEMINI.md
 # Vscode
 settings.json
 *.vscode/*
+*storybook.log
+storybook-static
