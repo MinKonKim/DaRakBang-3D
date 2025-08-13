@@ -1,13 +1,15 @@
-"use client"
+'use client'
 import { PropertyPanel } from "@/components/panel/property-panel"
 import { EditorScene } from "@/components/scene/editor-scene"
 import { ObjectsList } from "@/components/sidebar/object-list"
 import { Button } from "@/components/ui/button"
-import { useEditorStore } from "@/modules/editor/store"
+import { useUIStore } from "@/modules/editor/store/use-ui-store"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Box, Circle, Cylinder } from "lucide-react"
 
 export default function EditorApp() {
-  const { addObject, activePanel, setActivePanel } = useEditorStore()
+  const { addObject } = useObjectStore()
+  const { activePanel, setActivePanel } = useUIStore()
 
   return (
     <div className="flex h-screen bg-background">
@@ -17,9 +19,9 @@ export default function EditorApp() {
 
         {/* 툴바 */}
         <div className="absolute top-4 left-4 flex gap-2">
-          <Button onClick={() => addObject("cube")} size="sm">
+          <Button onClick={() => addObject("box")} size="sm">
             <Box className="w-4 h-4 mr-2" />
-            Add Cube
+            Add Box
           </Button>
           <Button onClick={() => addObject("sphere")} size="sm">
             <Circle className="w-4 h-4 mr-2" />

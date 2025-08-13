@@ -1,73 +1,44 @@
-import { ColorRepresentation, Euler, Object3D, Vector3 } from "three"
+'use client'
+import { pointToArray } from "@/modules/objects/utils/transform-convert"
+import { Object3DInfo } from "@/shared/types"
+import { Outlines } from "@react-three/drei"
+import React from "react"
+import * as THREE from "three"
 
-export interface BaseObjectSelectCallbacks {
-  onSelect?: (obj: BaseObject) => void
-  onDeselect?: (obj: BaseObject) => void
+// BaseObject가 받을 Props 정의
+// R3F의 GroupProps 대신, 표준 React 타입을 사용하여 group 요소의 모든 속성(예: onPointerDown)을 포함시킵니다.
+interface BaseObjectProps extends React.ComponentProps<"group"> {
+  objectInfo: Object3DInfo // 위치, 회전, 크기 등 객체 정보
+  isSelected: boolean // 현재 선택되었는지 여부
+  children: React.ReactNode // <boxGeometry />, <meshStandardMaterial /> 등 고유한 모양
 }
 
-export interface Transform {
-  position: Vector3
-  rotation: Euler
-  scale: Vector3
-}
+export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
+  ({ objectInfo, isSelected, children, ...props }, ref) => {
+    const { position, rotation, scale } = objectInfo
 
-export class BaseObject extends Object3D {
-  selectable = true
-  private _selectCallbacks: BaseObjectSelectCallbacks = {}
+    // onPointerDown과 같은 이벤트는 props로 직접 전달받아 사용
+    return (
+      <group
+        ref={ref}
+        position={pointToArray(position)}
+        rotation={pointToArray(rotation)}
+        scale={pointToArray(scale)}
+        {...props} // onPointerDown 등의 이벤트 핸들러를 여기서 적용
+      >
+        <mesh castShadow receiveShadow>
+          {children}
+          {/* 선택되었을 때만 Outlines 표시 */}
+          <Outlines
+            thickness={0.03}
+            color={isSelected ? "#22ff22" : "transparent"}
+            screenspace={false}
+            angle={Math.PI}
+          />
+        </mesh>
+      </group>
+    )
+  },
+)
 
-  constructor(name: string) {
-    super()
-    this.name = name
-  }
-
-  setPosition(position: Vector3) {
-    this.position.copy(position)
-    return this
-  }
-
-  setRotation(rotation: Euler) {
-    this.rotation.copy(rotation)
-    return this
-  }
-
-  setScale(scale: Vector3) {
-    this.scale.copy(scale)
-    return this
-  }
-
-  getTransform(): Transform {
-    return {
-      position: this.position.clone(),
-      rotation: this.rotation.clone(),
-      scale: this.scale.clone(),
-    }
-  }
-
-  onClick(globalSelect: (object: BaseObject) => void) {
-    if (this.selectable) globalSelect(this)
-  }
-
-  setSelectCallbacks(cbs: BaseObjectSelectCallbacks) {
-    this._selectCallbacks = cbs
-    return this
-  }
-
-  select() {
-    if (!this.selectable) return
-    this._selectCallbacks.onSelect?.(this)
-  }
-
-  deselect() {
-    this._selectCallbacks.onDeselect?.(this)
-  }
-
-  // ---- Optional: Simple highlight API ------------------------------------
-  enableHighlight(color?: ColorRepresentation) {
-    // 구체적 구현은 하위 객체에서 override 또는 컴포넌트로 확장.
-    // 예: 머티리얼 emissive 색 변경.
-  }
-
-  disableHighlight() {
-    // 구현부 생략.
-  }
-}
+BaseObject.displayName = "BaseObject"

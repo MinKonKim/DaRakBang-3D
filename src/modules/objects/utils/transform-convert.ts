@@ -1,61 +1,60 @@
-// src/shared/lib/transform-convert.ts
-import { Euler, Object3D, Vector3 } from "three"
-import {
-  ObjectTransform,
-  ObjectTransformState,
-  SceneObject,
-  SceneObjectState,
-  Vec3Arr,
-} from "../types/object-type"
+import * as THREE from "three"
 
-/* --- Vector 변환 --- */
-export const v3ToArr = (v: Vector3): Vec3Arr => [v.x, v.y, v.z]
-export const arrToV3 = (a: Vec3Arr, target = new Vector3()): Vector3 => target.set(a[0], a[1], a[2])
+type Point3D = { x: number; y: number; z: number }
 
-/* --- Euler 변환 --- */
-export const eulerToArr = (e: Euler): Vec3Arr => [e.x, e.y, e.z]
-export const arrToEuler = (
-  a: Vec3Arr,
-  order: Euler["order"] = "XYZ",
-  target = new Euler(),
-): Euler => target.set(a[0], a[1], a[2], order)
-
-/* --- Transform 변환 --- */
-export const transformDomainToState = (t: ObjectTransform): ObjectTransformState => ({
-  position: v3ToArr(t.position),
-  rotation: eulerToArr(t.rotation),
-  scale: v3ToArr(t.scale),
-})
-
-export const transformStateToDomain = (
-  t: ObjectTransformState,
-  target?: ObjectTransform,
-): ObjectTransform => {
-  if (target) {
-    arrToV3(t.position, target.position)
-    arrToEuler(t.rotation, target.rotation.order, target.rotation)
-    arrToV3(t.scale, target.scale)
-    return target
-  }
-  return {
-    position: arrToV3(t.position),
-    rotation: arrToEuler(t.rotation),
-    scale: arrToV3(t.scale),
-  }
+/**
+ * 유효한 3D 포인트 객체인지 검사하는 내부 헬퍼 함수입니다.
+ * @param point 검사할 객체
+ * @returns 유효한 경우 true, 그렇지 않으면 false
+ */
+const isValidPoint3D = (point: any): point is Point3D => {
+  return (
+    point &&
+    typeof point === "object" &&
+    typeof point.x === "number" &&
+    typeof point.y === "number" &&
+    typeof point.z === "number"
+  )
 }
 
-/* --- SceneObject 변환 --- */
-/* Domain -> State */
-export const sceneObjectDomainToState = (o: SceneObject): SceneObjectState => ({
-  id: o.id,
-  name: o.name,
-  type: o.object3D.type?.toLowerCase?.(), // 참고: Three.js 내부 type 문자열
-  transform: transformDomainToState(o.transform),
-})
+/**
+ * {x, y, z} 형태의 순수 객체를 [x, y, z] 형태의 배열로 변환합니다.
+ * 이 함수는 @react-three/fiber 컴포넌트의 props(position, rotation, scale)에 사용하기에 적합합니다.
+ * @param point 변환할 3D 포인트 객체
+ * @returns [number, number, number] 형태의 배열
+ */
+export const pointToArray = (point: Point3D): [number, number, number] => {
+  if (!isValidPoint3D(point)) {
+    console.error("Invalid point object provided to pointToArray", point)
+    return [0, 0, 0]
+  }
+  return [point.x, point.y, point.z]
+}
 
-/* State -> Domain patch */
-export const applyStateTransformToObject3D = (object3D: Object3D, t: ObjectTransformState) => {
-  object3D.position.set(...t.position)
-  object3D.rotation.set(...t.rotation)
-  object3D.scale.set(...t.scale)
+/**
+ * {x, y, z} 형태의 순수 객체를 THREE.Vector3 인스턴스로 변환합니다.
+ * 직접 Three.js 로직을 다룰 때 사용합니다.
+ * @param point 변환할 3D 포인트 객체
+ * @returns THREE.Vector3 인스턴스
+ */
+export const objectToVector3 = (point: Point3D): THREE.Vector3 => {
+  if (!isValidPoint3D(point)) {
+    console.error("Invalid point object provided to objectToVector3", point)
+    return new THREE.Vector3(0, 0, 0)
+  }
+  return new THREE.Vector3(point.x, point.y, point.z)
+}
+
+/**
+ * {x, y, z} 형태의 순수 객체를 THREE.Euler 인스턴스로 변환합니다.
+ * 직접 Three.js 로직을 다룰 때 사용합니다.
+ * @param point 변환할 3D 포인트 객체 (x, y, z는 라디안 값)
+ * @returns THREE.Euler 인스턴스
+ */
+export const objectToEuler = (point: Point3D): THREE.Euler => {
+  if (!isValidPoint3D(point)) {
+    console.error("Invalid point object provided to objectToEuler", point)
+    return new THREE.Euler(0, 0, 0)
+  }
+  return new THREE.Euler(point.x, point.y, point.z)
 }

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import {
   Badge,
   Button,
@@ -11,7 +11,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/"
-import { useEditorStore } from "@/modules/editor/store"
+import { useUIStore } from "@/modules/editor/store/use-ui-store"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Box, Circle, Cylinder, Layers, PanelLeftClose, Plus, Settings } from "lucide-react"
 import { PropertyPanel } from "../panel/property-panel"
 import { ObjectsList } from "./object-list"
@@ -20,7 +21,9 @@ interface EditorSidebarProps {
   isOpen: boolean
 }
 export function EditorSidebar({ isOpen = true }: EditorSidebarProps) {
-  const { addObject, objects, selectedObjectId, sidebarOpen, setSidebarOpen } = useEditorStore()
+  const { addObject, objectIds } = useObjectStore()
+  const { setSidebarOpen } = useUIStore()
+
   return (
     <Card className="w-80 h-full rounded-none border-l border-t-0 border-r-0 border-b-0">
       <CardHeader className="pb-3">
@@ -48,7 +51,7 @@ export function EditorSidebar({ isOpen = true }: EditorSidebarProps) {
                 <Layers className="w-4 h-4" />
                 Objects
                 <Badge variant="secondary" className="ml-1 text-xs">
-                  {objects.length}
+                  {objectIds.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value="properties" className="flex items-center gap-2">
@@ -72,13 +75,13 @@ export function EditorSidebar({ isOpen = true }: EditorSidebarProps) {
                   <CardContent className="pt-0">
                     <div className="grid grid-cols-3 gap-2">
                       <Button
-                        onClick={() => addObject("cube")}
+                        onClick={() => addObject("box")}
                         size="sm"
                         variant="outline"
                         className="flex flex-col gap-1 h-auto py-2"
                       >
                         <Box className="w-5 h-5" />
-                        <span className="text-xs">Cube</span>
+                        <span className="text-xs">Box</span>
                       </Button>
                       <Button
                         onClick={() => addObject("sphere")}

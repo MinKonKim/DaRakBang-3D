@@ -9,12 +9,14 @@ import {
   Label,
   ScrollArea,
 } from "@/components/ui/"
-import { useEditorStore, useSelectedObject } from "@/modules/editor/store"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
 import { Eye, EyeOff, Move3D, Palette, RotateCcw, Scale, Settings, Trash2 } from "lucide-react"
 
 export const PropertyPanel = () => {
   const selectedObject = useSelectedObject()
-  const { updateObjectProperty, toggleObjectVisibility, deleteObject } = useEditorStore()
+  const { updateObjectProperty, toggleObjectVisibility, deleteObject } = useObjectStore()
+
   if (!selectedObject) {
     return (
       <div className="px-6 pb-4">
@@ -189,66 +191,9 @@ export const PropertyPanel = () => {
                   return null
                 })}
               </div>
-
-              {/* 현재 값 표시 */}
-              {/* <div className="mt-3 p-2 bg-muted rounded-md">
-                <div className="text-xs text-muted-foreground mb-1">Current Values:</div>
-                <div className="text-xs font-mono">
-                  X: {selectedObject[key as keyof typeof selectedObject].x.toFixed(2)}, Y:{" "}
-                  {selectedObject[key as keyof typeof selectedObject].y.toFixed(2)}, Z:{" "}
-                  {selectedObject[key as keyof typeof selectedObject].z.toFixed(2)}
-                </div>
-              </div> */}
             </CardContent>
           </Card>
         ))}
-
-        {/* 빠른 작업 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePropertyChange("position", { x: 0, y: 0, z: 0 })}
-              >
-                Reset Position
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePropertyChange("rotation", { x: 0, y: 0, z: 0 })}
-              >
-                Reset Rotation
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePropertyChange("scale", { x: 1, y: 1, z: 1 })}
-              >
-                Reset Scale
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  handlePropertyChange(
-                    "color",
-                    "#" +
-                      Math.floor(Math.random() * 16777215)
-                        .toString(16)
-                        .padStart(6, "0"),
-                  )
-                }
-              >
-                Random Color
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </ScrollArea>
   )
