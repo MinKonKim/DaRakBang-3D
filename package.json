@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@react-three/test-renderer": "^9.1.0",
     "@storybook/nextjs": "^9.0.18",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

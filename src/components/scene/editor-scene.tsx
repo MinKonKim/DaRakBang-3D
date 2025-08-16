@@ -3,7 +3,7 @@ import { GroundPlane } from "@/components/editor/ground-plane"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
 import { Grid, OrbitControls } from "@react-three/drei"
-import { Canvas } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { SceneObject } from "./scene-object"
 
 export const EditorScene = () => {
@@ -91,3 +91,4 @@ export const EditorScene = () => {
     </div>
   )
 }
+

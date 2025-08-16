@@ -22,7 +22,7 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
     return null
   }
 
-  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+  const handleClick = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
     selectObject(objectInfo.id)
   }
@@ -33,7 +33,7 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
         <Box
           objectInfo={objectInfo}
           isSelected={isSelected}
-          onPointerDown={handlePointerDown}
+          onClick={handleClick}
         />
       )
     // 다른 타입의 오브젝트가 추가되면 여기에 case를 추가합니다.
@@ -41,4 +41,3 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
       return null
   }
 }
-1

@@ -2,7 +2,7 @@
 import { pointToArray } from "@/modules/objects/utils/transform-convert"
 import { Object3DInfo } from "@/shared/types"
 import { Outlines } from "@react-three/drei"
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import * as THREE from "three"
 
 // BaseObject가 받을 Props 정의
@@ -16,8 +16,12 @@ interface BaseObjectProps extends React.ComponentProps<"group"> {
 export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
   ({ objectInfo, isSelected, children, ...props }, ref) => {
     const { position, rotation, scale } = objectInfo
+    const meshRef = useRef<THREE.Mesh>(null!!);
 
-    // onPointerDown과 같은 이벤트는 props로 직접 전달받아 사용
+    useEffect(() => {
+     console.log(Boolean(meshRef.current))
+    }, [])
+
     return (
       <group
         ref={ref}
@@ -26,7 +30,7 @@ export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
         scale={pointToArray(scale)}
         {...props} // onPointerDown 등의 이벤트 핸들러를 여기서 적용
       >
-        <mesh castShadow receiveShadow>
+        <mesh  ref={meshRef} castShadow receiveShadow>
           {children}
           {/* 선택되었을 때만 Outlines 표시 */}
           <Outlines

@@ -9,8 +9,10 @@ interface UIStoreState {
   activePanel: "objects" | "properties" | "materials"
   cameraPosition: [number, number, number]
   cameraTarget: [number, number, number]
+  isEditMode : boolean
 
   // --- Actions ---
+  toggleEditMode:()=>void
   setSidebarOpen: (open: boolean) => void
   setActivePanel: (panel: "objects" | "properties" | "materials") => void
   setCameraState: (position: [number, number, number], target: [number, number, number]) => void
@@ -22,8 +24,10 @@ export const useUIStore = create<UIStoreState>()(set => ({
   activePanel: "objects",
   cameraPosition: [5, 5, 5],
   cameraTarget: [0, 0, 0],
+  isEditMode : true,
 
   // --- 액션 구현부 ---
+  toggleEditMode: ()=>set(state=>({isEditMode:!state.isEditMode})),
   setSidebarOpen: open => set({ sidebarOpen: open }),
   setActivePanel: panel => set({ activePanel: panel }),
   setCameraState: (position, target) =>
