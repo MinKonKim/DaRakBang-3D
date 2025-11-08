@@ -1,14 +1,26 @@
 'use client'
+import { ObjectInfoPanel } from "@/components/property-panels/panels/object-info-panel"
+import { TransformPanel } from "@/components/property-panels/panels/transform-panel"
 import { EditorScene } from "@/components/scene/editor-scene"
 import { EditorSidebar } from "@/components/sidebar/editor-sidebar"
 import { Button } from "@/components/ui/button"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { usePropertyPanelStore } from "@/modules/editor/store/property-panel-store"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { PanelRightOpen } from "lucide-react"
+import { useEffect } from "react"
 
 export default function EditorApp() {
   // 이 페이지는 이제 전체 레이아웃과 사이드바의 열림/닫힘 상태만 관리합니다.
   const { sidebarOpen, setSidebarOpen } = useUIStore()
+  const addPanelComponent = usePropertyPanelStore(state => state.addPanelComponent)
+
+  useEffect(() => {
+    // 에디터가 로드될 때 Property Panel에 표시할 컴포넌트들을 등록합니다.
+    // 등록 순서대로 패널에 표시됩니다.
+    addPanelComponent(ObjectInfoPanel)
+    addPanelComponent(TransformPanel)
+  }, [addPanelComponent])
 
   return (
     <ResizablePanelGroup direction="horizontal" className="w-full h-screen bg-background">

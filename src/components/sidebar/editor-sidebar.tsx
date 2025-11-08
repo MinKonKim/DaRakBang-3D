@@ -28,7 +28,7 @@ import {
   Settings,
   Unlock,
 } from "lucide-react"
-import { PropertyPanel } from "../panel/property-panel"
+import { PropertyPanel } from "../property-panels/property-panel"
 import { ObjectsList } from "./object-list"
 
 export function EditorSidebar() {
