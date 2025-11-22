@@ -1,60 +1,58 @@
-"use client"
-import { PropertyPanel } from "@/components/panel/property-panel"
+'use client'
+import { ObjectInfoPanel } from "@/components/property-panels/panels/object-info-panel"
+import { TransformPanel } from "@/components/property-panels/panels/transform-panel"
 import { EditorScene } from "@/components/scene/editor-scene"
-import { ObjectsList } from "@/components/sidebar/object-list"
+import { EditorSidebar } from "@/components/sidebar/editor-sidebar"
 import { Button } from "@/components/ui/button"
-import { useEditorStore } from "@/modules/editor/store"
-import { Box, Circle, Cylinder } from "lucide-react"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { usePropertyPanelStore } from "@/modules/editor/store/property-panel-store"
+import { useUIStore } from "@/modules/editor/store/use-ui-store"
+import { PanelRightOpen } from "lucide-react"
+import { useEffect } from "react"
 
 export default function EditorApp() {
-  const { addObject, activePanel, setActivePanel } = useEditorStore()
+  // 이 페이지는 이제 전체 레이아웃과 사이드바의 열림/닫힘 상태만 관리합니다.
+  const { sidebarOpen, setSidebarOpen } = useUIStore()
+  const addPanelComponent = usePropertyPanelStore(state => state.addPanelComponent)
+
+  useEffect(() => {
+    // 에디터가 로드될 때 Property Panel에 표시할 컴포넌트들을 등록합니다.
+    // 등록 순서대로 패널에 표시됩니다.
+    addPanelComponent(ObjectInfoPanel)
+    addPanelComponent(TransformPanel)
+  }, [addPanelComponent])
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* 3D 씬 영역 */}
-      <div className="flex-1 relative">
+    <ResizablePanelGroup direction="horizontal" className="w-full h-screen bg-background">
+      <ResizablePanel defaultSize={75} minSize={50}>
         <EditorScene />
+      </ResizablePanel>
 
-        {/* 툴바 */}
-        <div className="absolute top-4 left-4 flex gap-2">
-          <Button onClick={() => addObject("cube")} size="sm">
-            <Box className="w-4 h-4 mr-2" />
-            Add Cube
-          </Button>
-          <Button onClick={() => addObject("sphere")} size="sm">
-            <Circle className="w-4 h-4 mr-2" />
-            Add Sphere
-          </Button>
-          <Button onClick={() => addObject("cylinder")} size="sm">
-            <Cylinder className="w-4 h-4 mr-2" />
-            Add Cylinder
+      <ResizableHandle withHandle />
+
+      {/* sidebarOpen 상태에 따라 사이드바 패널 또는 열기 버튼을 조건부로 렌더링합니다. */}
+      {sidebarOpen ? (
+        <ResizablePanel
+          id="sidebar"
+          order={2}
+          defaultSize={25}
+          minSize={15}
+          maxSize={30}
+          collapsible
+          collapsedSize={0} // 완전히 접히도록 설정
+          onCollapse={() => setSidebarOpen(false)} // 패널이 접혔을 때 상태 업데이트
+        >
+          {/* 모든 사이드바 UI는 이 컴포넌트가 담당합니다. */}
+          <EditorSidebar />
+        </ResizablePanel>
+      ) : (
+        // 사이드바가 닫혔을 때, 다시 열 수 있는 버튼을 표시합니다.
+        <div className="flex items-start justify-center p-2 border-l bg-card">
+          <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
+            <PanelRightOpen className="h-5 w-5" />
           </Button>
         </div>
-      </div>
-
-      {/* 사이드바 */}
-      <div className="w-80 border-l bg-card">
-        <div className="flex border-b">
-          <Button
-            variant={activePanel === "objects" ? "secondary" : "ghost"}
-            className="flex-1 rounded-none"
-            onClick={() => setActivePanel("objects")}
-          >
-            Objects
-          </Button>
-          <Button
-            variant={activePanel === "properties" ? "secondary" : "ghost"}
-            className="flex-1 rounded-none"
-            onClick={() => setActivePanel("properties")}
-          >
-            Properties
-          </Button>
-        </div>
-
-        <div className="h-full overflow-y-auto">
-          {activePanel === "objects" ? <ObjectsList /> : <PropertyPanel />}
-        </div>
-      </div>
-    </div>
+      )}
+    </ResizablePanelGroup>
   )
 }

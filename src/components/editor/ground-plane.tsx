@@ -1,8 +1,9 @@
-import { useEditorStore } from "@/modules/editor/store"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { Plane } from "@react-three/drei"
 import { ThreeEvent } from "@react-three/fiber"
 
 export const GroundPlane = () => {
-  const selectObject = useEditorStore(state => state.selectObject)
+  const selectObject = useObjectStore(state => state.selectObject)
 
   const handleGroundClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()

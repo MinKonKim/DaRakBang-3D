@@ -1,20 +1,24 @@
-"use client"
-import { useEditorStore } from "@/modules/editor/store/use-edit-store"
+'use client'
+import { GroundPlane } from "@/components/editor/ground-plane"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
 import { Grid, OrbitControls } from "@react-three/drei"
-import { Canvas } from "@react-three/fiber"
-import { GroundPlane } from "../editor/ground-plane"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { SceneObject } from "./scene-object"
-// 개별 오브젝트 컴포넌트
+
 export const EditorScene = () => {
-  const objects = useEditorStore(state => state.objects)
-  const selectObject = useEditorStore(state => state.selectObject)
-  const selectedObjectId = useEditorStore(state => state.selectedObjectId)
+  // 새 스토어에서 필요한 상태와 액션을 가져옵니다.
+  // 이 컴포넌트는 ID 목록만 구독하므로, 개별 객체의 속성이 변경되어도 리렌더링되지 않습니다.
+  const objectIds = useObjectStore(state => state.objectIds)
+  const selectObject = useObjectStore(state => state.selectObject)
+  const selectedObjectId = useObjectStore(state => state.selectedObjectId)
+
+  // 선택된 객체의 상세 정보는 별도의 최적화된 훅을 통해 가져옵니다.
+  const selectedObject = useSelectedObject()
 
   // 캔버스 배경 클릭 시 선택 해제
-  const handleCanvasClick = () => {
-    // 오브젝트가 아닌 빈 공간을 클릭했을 때만 실행
+  const handleDeselect = () => {
     selectObject(null)
-    console.log("Canvas clicked - deselected all")
   }
 
   return (
@@ -27,7 +31,7 @@ export const EditorScene = () => {
           near: 0.1,
           far: 1000,
         }}
-        onClick={handleCanvasClick}
+        onPointerMissed={handleDeselect}
         style={{ background: "linear-gradient(to bottom, #87CEEB 0%, #98D8E8 100%)" }}
       >
         {/* 조명 설정 */}
@@ -54,9 +58,13 @@ export const EditorScene = () => {
         {/* 그라운드 플레인 */}
         <GroundPlane />
 
-        {/* 3D 오브젝트들 렌더링 */}
-        {objects.map(obj => (
-          <SceneObject key={obj.id} objectInfo={obj} />
+        {/* 3D 오브젝트들 렌더링: 전체 객체 배열이 아닌, ID 배열을 순회합니다. */}
+        {objectIds.map(id => (
+          <SceneObject
+            key={id}
+            objectId={id} // SceneObject에는 전체 정보 대신 ID만 넘겨줍니다.
+            isSelected={selectedObjectId === id}
+          />
         ))}
 
         {/* 카메라 컨트롤 */}
@@ -75,21 +83,12 @@ export const EditorScene = () => {
       </Canvas>
 
       {/* 선택된 오브젝트 정보 표시 */}
-      {selectedObjectId && (
+      {selectedObject && (
         <div className="absolute top-4 right-4 bg-black bg-opacity-70 text-white p-3 rounded-lg">
-          <div className="text-sm">
-            Selected: {objects.find(obj => obj.id === selectedObjectId)?.name}
-          </div>
+          <div className="text-sm">Selected: {selectedObject.name}</div>
         </div>
       )}
-
-      {/* 조작 가이드 */}
-      {/* <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 text-white p-3 rounded-lg text-xs">
-        <div>🖱️ Left Click: Select Object</div>
-        <div>🖱️ Right Drag: Rotate Camera</div>
-        <div>🖱️ Middle Drag: Pan Camera</div>
-        <div>🖱️ Scroll: Zoom</div>
-      </div> */}
     </div>
   )
 }
+
