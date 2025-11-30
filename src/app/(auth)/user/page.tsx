@@ -1,7 +1,7 @@
 "use client"
-import { Button } from "@/components/ui";
-import {  UserInsertType } from "@/modules/users/type";
+import { UserInsertType } from "@/modules/users/type";
 import { usersInstance } from "@/shared/lib/axios";
+import { Button } from "@/shared/ui";
 
 export default function UserPage(){
 

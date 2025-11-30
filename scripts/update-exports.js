@@ -5,7 +5,7 @@ const path = require("path");
 
 // 컴포넌트 이름을 받아서 index.ts에 export 추가
 function addExportToIndex(componentName) {
-  const indexPath = path.join(__dirname, "../src/components/ui/index.ts");
+  const indexPath = path.join(__dirname, "../src/shared/ui/index.ts");
   const componentPath = `./${componentName}`;
 
   // index.ts 파일이 없으면 생성

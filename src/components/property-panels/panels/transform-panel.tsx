@@ -1,18 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle, Input, Label } from "@/components/ui/"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Object3DInfo } from "@/shared/types"
-import { Move3D, RotateCcw, Scale } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, Input, Label } from "@/shared/ui"
+import { LucideIcon, Move3D, RotateCcw, Scale } from "lucide-react"
 
 // Transform 속성 패널의 타입 정의
 type TransformKey = "position" | "rotation" | "scale"
 
-// Transform 속성 배열의 각 항목에 대한 타입 정의
 type TransformProperty = {
   key: TransformKey
   label: string
-  icon: React.ElementType
+  icon: LucideIcon
   step: number
   min?: number
 }

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { Button } from "@/shared/ui/button"
+import { ScrollArea } from "@/shared/ui/scroll-area"
 import { Box, Circle, Cylinder, Eye, EyeOff, Trash2 } from "lucide-react"
 import React from "react"
 

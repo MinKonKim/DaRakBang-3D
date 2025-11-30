@@ -1,32 +1,32 @@
 'use client'
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import {
-  Box,
-  Circle,
-  Cylinder,
-  Layers,
-  Lock,
-  PanelLeftClose,
-  Plus,
-  Settings,
-  Unlock,
+    Badge,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/shared/ui/"
+import {
+    Box,
+    Circle,
+    Cylinder,
+    Layers,
+    Lock,
+    PanelLeftClose,
+    Plus,
+    Settings,
+    Unlock,
 } from "lucide-react"
 import { PropertyPanel } from "../property-panels/property-panel"
 import { ObjectsList } from "./object-list"

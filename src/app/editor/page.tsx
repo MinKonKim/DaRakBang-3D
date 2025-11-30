@@ -3,10 +3,10 @@ import { ObjectInfoPanel } from "@/components/property-panels/panels/object-info
 import { TransformPanel } from "@/components/property-panels/panels/transform-panel"
 import { EditorScene } from "@/components/scene/editor-scene"
 import { EditorSidebar } from "@/components/sidebar/editor-sidebar"
-import { Button } from "@/components/ui/button"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { usePropertyPanelStore } from "@/modules/editor/store/property-panel-store"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
+import { Button } from "@/shared/ui/button"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/shared/ui/resizable"
 import { PanelRightOpen } from "lucide-react"
 import { useEffect } from "react"
 

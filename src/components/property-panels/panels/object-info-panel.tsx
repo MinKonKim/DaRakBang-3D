@@ -1,3 +1,7 @@
+import { useUIStore } from "@/modules/editor/store/use-ui-store"
+import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
+import { Object3DInfo } from "@/shared/types"
 import {
   Button,
   Card,
@@ -6,11 +10,7 @@ import {
   CardTitle,
   Input,
   Label,
-} from "@/components/ui/"
-import { useUIStore } from "@/modules/editor/store/use-ui-store"
-import { useObjectStore } from "@/modules/objects/store/use-object-store"
-import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Object3DInfo } from "@/shared/types"
+} from "@/shared/ui"
 import { Eye, Palette, Settings, Trash2 } from "lucide-react"
 
 export const ObjectInfoPanel = () => {

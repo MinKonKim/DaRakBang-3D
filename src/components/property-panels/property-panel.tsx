@@ -1,9 +1,10 @@
-import { Badge, Card, CardContent, ScrollArea } from "@/components/ui/"
 import { usePropertyPanelStore } from "@/modules/editor/store/property-panel-store"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Settings } from "lucide-react"
 import React from "react"
+
+import { Badge, Card, CardContent, ScrollArea } from "@/shared/ui"
+import { Settings } from "lucide-react"
 
 export const PropertyPanel = () => {
   const selectedObject = useSelectedObject()
