@@ -47,3 +47,6 @@ settings.json
 *.vscode/*
 *storybook.log
 storybook-static
+
+# agent
+.agent
