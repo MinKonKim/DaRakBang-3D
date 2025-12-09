@@ -8,7 +8,6 @@ import {
   SheetTrigger,
 } from '@/shared/ui'
 import type { Meta, StoryObj } from '@storybook/nextjs'
-
 const meta = {
   title: 'UI/Sheet',
   component: Sheet,
