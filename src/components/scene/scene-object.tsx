@@ -3,7 +3,7 @@ import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { ThreeEvent } from "@react-three/fiber"
 import React from "react"
-import { Box } from "../object/3d"
+import { Box } from "../objects/3d"
 
 // 이 컴포넌트는 이제 전체 objectInfo 대신 objectId만 prop으로 받습니다.
 interface SceneObjectProps {
