@@ -1,5 +1,5 @@
+import { usePropertyManager } from "@/managers/hooks/use-property-manager"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
-import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
 import { Card, CardContent, CardHeader, CardTitle, Input, Label } from "@/shared/ui"
 import { LucideIcon, Move3D, RotateCcw, Scale } from "lucide-react"
@@ -23,7 +23,7 @@ const transformProperties: TransformProperty[] = [
 
 export const TransformPanel = () => {
   const selectedObject = useSelectedObject()
-  const { updateObjectProperty } = useObjectStore()
+  const propertyManager = usePropertyManager()
   const { isEditMode } = useUIStore()
 
   if (!selectedObject) return null
@@ -34,7 +34,11 @@ export const TransformPanel = () => {
     value: number,
   ) => {
     const currentVector = selectedObject[vectorProperty] || { x: 0, y: 0, z: 0 }
-    updateObjectProperty(selectedObject.id, vectorProperty, { ...currentVector, [axis]: value })
+    // 매니저를 통해 업데이트 요청 (Undo/Redo 지원)
+    propertyManager.updateTransform(selectedObject.id, vectorProperty, {
+      ...currentVector,
+      [axis]: value,
+    })
   }
 
   return (
