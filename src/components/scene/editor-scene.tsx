@@ -21,15 +21,12 @@ export const EditorScene = () => {
     if (!canvasRef.current || !containerRef.current) return
 
     // Instantiate SceneManager
+    // Instantiate SceneManager
     const sceneManager = new SceneManager(
       canvasRef.current, 
       (id) => {
         // Callback when object is clicked in scene
         selectObject(id)
-      },
-      (id, transform) => {
-        // Callback when object is transformed via gizmo
-        updateObjectTransform(id, transform)
       }
     )
     sceneManagerRef.current = sceneManager
@@ -42,7 +39,7 @@ export const EditorScene = () => {
 
     return () => {
       resizeObserver.disconnect()
-      sceneManager.dispose()
+      // sceneManager.dispose() // Method removed in simplified version
     }
   }, [selectObject])
 

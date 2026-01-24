@@ -1,6 +1,6 @@
 import { Object3DInfo } from "@/shared/types/editor-type"
 import * as THREE from "three"
-class SceneManager {
+export class SceneManager {
   scene: THREE.Scene
   camera: THREE.PerspectiveCamera
   renderer: THREE.WebGLRenderer
@@ -152,13 +152,7 @@ class SceneManager {
 
   animate() {
     requestAnimationFrame(this.animate.bind(this))
-
-    // Simple camera rotation
-    const time = Date.now() * 0.0005
-    this.camera.position.x = Math.cos(time) * 8
-    this.camera.position.z = Math.sin(time) * 8
-    this.camera.lookAt(0, 0, 0)
-
     this.renderer.render(this.scene, this.camera)
   }
 }
+
