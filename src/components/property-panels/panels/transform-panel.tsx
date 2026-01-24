@@ -1,7 +1,8 @@
 import { usePropertyManager } from "@/managers/hooks/use-property-manager"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Card, CardContent, CardHeader, CardTitle, Input, Label } from "@/shared/ui"
+import { Input, Label } from "@/shared/ui"
+import { BasePanel } from "./base-panel"
 import { LucideIcon, Move3D, RotateCcw, Scale } from "lucide-react"
 
 // Transform 속성 패널의 타입 정의
@@ -42,39 +43,41 @@ export const TransformPanel = () => {
   }
 
   return (
-    <Card>
-      <CardHeader className="border-b-1">
-        <CardTitle>Transform</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-2">
-        {transformProperties.map(({ key, label, icon: Icon, step, min }) => (
-          <div key={key} className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <Icon className="w-4 h-4" />
-              <span>{label}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {(["x", "y", "z"] as const).map(axis => (
-                <div key={axis} className="relative">
-                  <div className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground uppercase pointer-events-none">
-                    {axis}
+    <BasePanel
+      title="Transform"
+      content={
+        <div className="space-y-6">
+          {transformProperties.map(({ key, label, icon: Icon, step, min }) => (
+            <div key={key} className="space-y-2">
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <Icon className="w-4 h-4" />
+                <span>{label}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {(["x", "y", "z"] as const).map((axis) => (
+                  <div key={axis} className="relative">
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground uppercase pointer-events-none">
+                      {axis}
+                    </div>
+                    <Input
+                      id={`${key}-${axis}`}
+                      type="number"
+                      step={step}
+                      min={min}
+                      value={String(selectedObject[key]?.[axis] ?? 0)}
+                      onChange={(e) =>
+                        handleVectorChange(key, axis, parseFloat(e.target.value) || 0)
+                      }
+                      className="pl-5 h-8"
+                      disabled={!isEditMode}
+                    />
                   </div>
-                  <Input
-                    id={`${key}-${axis}`}
-                    type="number"
-                    step={step}
-                    min={min}
-                    value={String(selectedObject[key]?.[axis] ?? 0)}
-                    onChange={e => handleVectorChange(key, axis, parseFloat(e.target.value) || 0)}
-                    className="pl-5 h-8" 
-                    disabled={!isEditMode}
-                  />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          ))}
+        </div>
+      }
+    />
   )
 }
