@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { fn } from 'storybook/test';
-import { Button } from './Button';
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { fn } from "storybook/test";
+import { Button } from "./Button";
 
 const meta = {
-  title: 'Example/Button',
+  title: "Example/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary'],
+      control: { type: "select" },
+      options: ["primary", "secondary"],
     },
     size: {
-      control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
+      control: { type: "select" },
+      options: ["small", "medium", "large"],
     },
   },
   args: { onClick: fn() },
@@ -27,28 +27,28 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    label: 'Button',
+    variant: "primary",
+    label: "Button",
   },
 };
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
-    label: 'Button',
+    variant: "secondary",
+    label: "Button",
   },
 };
 
 export const Large: Story = {
   args: {
-    size: 'large',
-    label: 'Button',
+    size: "large",
+    label: "Button",
   },
 };
 
 export const Small: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
+    size: "small",
+    label: "Button",
   },
 };

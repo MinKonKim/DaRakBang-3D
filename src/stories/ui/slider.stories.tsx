@@ -1,14 +1,14 @@
-import { Slider } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { useState } from 'react'
+import { Slider } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
+import { useState } from "react"
 
 const meta = {
-  title: 'UI/Slider',
+  title: "UI/Slider",
   component: Slider,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Slider>
 
 export default meta
@@ -19,7 +19,7 @@ export const Default: Story = {
     defaultValue: [50],
     max: 100,
     step: 1,
-    className: 'w-[300px]',
+    className: "w-[300px]",
   },
 }
 
@@ -28,7 +28,7 @@ export const Range: Story = {
     defaultValue: [25, 75],
     max: 100,
     step: 1,
-    className: 'w-[300px]',
+    className: "w-[300px]",
   },
 }
 
@@ -37,7 +37,7 @@ export const WithSteps: Story = {
     defaultValue: [50],
     max: 100,
     step: 10,
-    className: 'w-[300px]',
+    className: "w-[300px]",
   },
 }
 

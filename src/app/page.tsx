@@ -21,8 +21,8 @@ export default function Home() {
 
         <div className="flex gap-4 justify-center">
           <Button
-          size="xl"
-          onClick={handleStartButtonClick}
+            size="xl"
+            onClick={handleStartButtonClick}
           >
             🎨 에디터 시작하기
           </Button>

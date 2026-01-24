@@ -6,15 +6,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+} from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 const meta = {
-  title: 'UI/Sheet',
+  title: "UI/Sheet",
   component: Sheet,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Sheet>
 
 export default meta

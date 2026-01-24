@@ -1,17 +1,17 @@
-import { Badge } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Badge } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Badge',
+  title: "UI/Badge",
   component: Badge,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline'],
+      control: "select",
+      options: ["default", "secondary", "destructive", "outline"],
     },
   },
 } satisfies Meta<typeof Badge>
@@ -21,29 +21,29 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    children: 'Badge',
-    variant: 'default',
+    children: "Badge",
+    variant: "default",
   },
 }
 
 export const Secondary: Story = {
   args: {
-    children: 'Secondary',
-    variant: 'secondary',
+    children: "Secondary",
+    variant: "secondary",
   },
 }
 
 export const Destructive: Story = {
   args: {
-    children: 'Destructive',
-    variant: 'destructive',
+    children: "Destructive",
+    variant: "destructive",
   },
 }
 
 export const Outline: Story = {
   args: {
-    children: 'Outline',
-    variant: 'outline',
+    children: "Outline",
+    variant: "outline",
   },
 }
 

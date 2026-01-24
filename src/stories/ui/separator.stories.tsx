@@ -1,13 +1,13 @@
-import { Separator } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Separator } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Separator',
+  title: "UI/Separator",
   component: Separator,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Separator>
 
 export default meta

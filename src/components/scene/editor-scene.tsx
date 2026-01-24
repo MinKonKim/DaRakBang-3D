@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { SceneManager } from "@/managers/scene-manager"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
@@ -23,17 +23,17 @@ export const EditorScene = () => {
     // Instantiate SceneManager
     // Instantiate SceneManager
     const sceneManager = new SceneManager(
-      canvasRef.current, 
+      canvasRef.current,
       (id) => {
         // Callback when object is clicked in scene
         selectObject(id)
-      }
+      },
     )
     sceneManagerRef.current = sceneManager
 
     // Handle Resize
     const resizeObserver = new ResizeObserver(() => {
-     sceneManager.onWindowResize()
+      sceneManager.onWindowResize()
     })
     resizeObserver.observe(containerRef.current)
 
@@ -64,7 +64,7 @@ export const EditorScene = () => {
         sceneManager.removeObject(id)
       }
     })
-    
+
   }, [objects])
 
   // Sync Selection
@@ -78,7 +78,7 @@ export const EditorScene = () => {
   return (
     <div ref={containerRef} className="w-full h-full relative bg-black">
       <canvas ref={canvasRef} className="w-full h-full block" />
-      
+
       {/* Optional: Overlay UI for selected object info */}
       {selectedObjectId && objects[selectedObjectId] && (
         <div className="absolute top-4 right-4 bg-black/70 text-white p-3 rounded pointer-events-none">

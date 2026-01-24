@@ -1,13 +1,13 @@
-import { Skeleton } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Skeleton } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Skeleton',
+  title: "UI/Skeleton",
   component: Skeleton,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Skeleton>
 
 export default meta
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    className: 'w-[100px] h-[20px]',
+    className: "w-[100px] h-[20px]",
   },
 }
 

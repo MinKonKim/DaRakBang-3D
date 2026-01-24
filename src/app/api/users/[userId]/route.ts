@@ -11,15 +11,15 @@ interface RouteContext {
 }
 
 export const GET = async()=>{
-    const response = await getUserList()
-    return NextResponse.json(response);
+  const response = await getUserList()
+  return NextResponse.json(response);
 }
 
 
 export const POST=async(req: Request)=> {
-    const body: UserInsertType = await req.json()
-    const response = await insertUser(body)
-    return NextResponse.json(response)
+  const body: UserInsertType = await req.json()
+  const response = await insertUser(body)
+  return NextResponse.json(response)
 }
 /**
  * 특정 사용자 정보를 조회하는 API (GET)

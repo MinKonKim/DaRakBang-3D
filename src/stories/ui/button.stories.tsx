@@ -1,22 +1,22 @@
-import { Button } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Mail, Plus } from 'lucide-react'
+import { Button } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
+import { Mail, Plus } from "lucide-react"
 
 const meta = {
-  title: 'UI/Button',
+  title: "UI/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      control: "select",
+      options: ["default", "destructive", "outline", "secondary", "ghost", "link"],
     },
     size: {
-      control: 'select',
-      options: ['default', 'sm', 'lg', 'xl', 'icon'],
+      control: "select",
+      options: ["default", "sm", "lg", "xl", "icon"],
     },
   },
 } satisfies Meta<typeof Button>
@@ -26,42 +26,42 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    children: 'Button',
+    children: "Button",
   },
 }
 
 export const Destructive: Story = {
   args: {
-    children: 'Destructive',
-    variant: 'destructive',
+    children: "Destructive",
+    variant: "destructive",
   },
 }
 
 export const Outline: Story = {
   args: {
-    children: 'Outline',
-    variant: 'outline',
+    children: "Outline",
+    variant: "outline",
   },
 }
 
 export const Secondary: Story = {
   args: {
-    children: 'Secondary',
-    variant: 'secondary',
+    children: "Secondary",
+    variant: "secondary",
   },
 }
 
 export const Ghost: Story = {
   args: {
-    children: 'Ghost',
-    variant: 'ghost',
+    children: "Ghost",
+    variant: "ghost",
   },
 }
 
 export const Link: Story = {
   args: {
-    children: 'Link',
-    variant: 'link',
+    children: "Link",
+    variant: "link",
   },
 }
 
@@ -78,7 +78,7 @@ export const WithIcon: Story = {
 
 export const IconButton: Story = {
   args: {
-    size: 'icon',
+    size: "icon",
     children: <Plus />,
   },
 }
@@ -113,7 +113,7 @@ export const AllVariants: Story = {
 
 export const Disabled: Story = {
   args: {
-    children: 'Disabled',
+    children: "Disabled",
     disabled: true,
   },
 }

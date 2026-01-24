@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { ThreeEvent } from "@react-three/fiber"
@@ -28,16 +28,16 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
   }
 
   switch (objectInfo.type) {
-    case "box":
-      return (
-        <Box
-          objectInfo={objectInfo}
-          isSelected={isSelected}
-          onClick={handleClick}
-        />
-      )
+  case "box":
+    return (
+      <Box
+        objectInfo={objectInfo}
+        isSelected={isSelected}
+        onClick={handleClick}
+      />
+    )
     // 다른 타입의 오브젝트가 추가되면 여기에 case를 추가합니다.
-    default:
-      return null
+  default:
+    return null
   }
 }

@@ -59,14 +59,14 @@ export class SceneManager {
 
   createGeometry(type: string): THREE.BufferGeometry {
     switch (type) {
-      case "cube":
-        return new THREE.BoxGeometry(1, 1, 1)
-      case "sphere":
-        return new THREE.SphereGeometry(0.5, 32, 32)
-      case "cylinder":
-        return new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
-      default:
-        return new THREE.BoxGeometry(1, 1, 1)
+    case "cube":
+      return new THREE.BoxGeometry(1, 1, 1)
+    case "sphere":
+      return new THREE.SphereGeometry(0.5, 32, 32)
+    case "cylinder":
+      return new THREE.CylinderGeometry(0.5, 0.5, 1, 32)
+    default:
+      return new THREE.BoxGeometry(1, 1, 1)
     }
   }
 

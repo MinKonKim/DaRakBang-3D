@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { Object3DInfo } from "@/shared/types"
 import React from "react"
 import { BaseObject } from "./base-3d-object"

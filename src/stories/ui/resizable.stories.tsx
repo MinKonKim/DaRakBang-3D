@@ -1,17 +1,17 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Resizable',
+  title: "UI/Resizable",
   component: ResizablePanelGroup,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof ResizablePanelGroup>
 
 export default meta
-type Story = Omit<StoryObj<typeof meta>, 'args'> & { args?: never }
+type Story = Omit<StoryObj<typeof meta>, "args"> & { args?: never }
 
 export const Horizontal: Story = {
   render: () => (

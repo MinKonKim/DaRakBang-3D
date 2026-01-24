@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { ObjectInfoPanel } from "@/components/property-panels/panels/object-info-panel"
 import { TransformPanel } from "@/components/property-panels/panels/transform-panel"
 import { EditorScene } from "@/components/scene/editor-scene"

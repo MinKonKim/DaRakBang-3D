@@ -10,13 +10,13 @@ import { Vector3 } from "three";
 
 export const  pointToArray=(point : {x:number, y:number,z:number }) :[x:number,y:number,z:number] => {
   if (
-    typeof point !== 'object' ||
+    typeof point !== "object" ||
     point === null ||
-    typeof point.x !== 'number' ||
-    typeof point.y !== 'number' ||
-    typeof point.z !== 'number'
+    typeof point.x !== "number" ||
+    typeof point.y !== "number" ||
+    typeof point.z !== "number"
   ) {
-    throw new TypeError('입력값은 {x:number, y:number, z:number} 형태여야 합니다.');
+    throw new TypeError("입력값은 {x:number, y:number, z:number} 형태여야 합니다.");
   }
   return [point.x, point.y, point.z];
 }

@@ -1,4 +1,4 @@
-import { useObjectStore } from './use-object-store'
+import { useObjectStore } from "./use-object-store"
 
 /**
  * ID를 이용해 특정 객체의 정보만 가져오는 selector 훅입니다.

@@ -1,14 +1,14 @@
-import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { ChevronsUpDown } from 'lucide-react'
+import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
+import { ChevronsUpDown } from "lucide-react"
 
 const meta = {
-  title: 'UI/Collapsible',
+  title: "UI/Collapsible",
   component: Collapsible,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Collapsible>
 
 export default meta

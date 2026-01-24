@@ -1,13 +1,13 @@
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Tooltip',
+  title: "UI/Tooltip",
   component: Tooltip,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Tooltip>
 
 export default meta

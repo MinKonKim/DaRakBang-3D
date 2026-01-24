@@ -1,5 +1,5 @@
-import { useObjectStore } from './use-object-store'
-import { Object3DInfo } from '@/shared/types'
+import { useObjectStore } from "./use-object-store"
+import { Object3DInfo } from "@/shared/types"
 
 /**
  * 현재 선택된 객체의 정보를 가져오는 selector 훅입니다.

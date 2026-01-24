@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { pointToArray } from "@/modules/objects/utils/transform-convert"
 import { Object3DInfo } from "@/shared/types"
 import { Outlines } from "@react-three/drei"
@@ -16,10 +16,10 @@ interface BaseObjectProps extends React.ComponentProps<"group"> {
 export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
   ({ objectInfo, isSelected, children, ...props }, ref) => {
     const { position, rotation, scale } = objectInfo
-    const meshRef = useRef<THREE.Mesh>(null!!);
+    const meshRef = useRef<THREE.Mesh>(null!);
 
     useEffect(() => {
-     console.log(Boolean(meshRef.current))
+      console.log(Boolean(meshRef.current))
     }, [])
 
     return (

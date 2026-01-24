@@ -1,13 +1,13 @@
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/Card',
+  title: "UI/Card",
   component: Card,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Card>
 
 export default meta

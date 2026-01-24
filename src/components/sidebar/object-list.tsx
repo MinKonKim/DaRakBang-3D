@@ -20,14 +20,14 @@ const ObjectListItem = React.memo(({ objectId }: { objectId: string }) => {
 
   const getObjectIcon = (type: string) => {
     switch (type) {
-      case "box": // "cube"에서 "box"로 일관성을 위해 변경했습니다.
-        return <Box className="w-4 h-4" />
-      case "sphere":
-        return <Circle className="w-4 h-4" />
-      case "cylinder":
-        return <Cylinder className="w-4 h-4" />
-      default:
-        return <Box className="w-4 h-4" />
+    case "box": // "cube"에서 "box"로 일관성을 위해 변경했습니다.
+      return <Box className="w-4 h-4" />
+    case "sphere":
+      return <Circle className="w-4 h-4" />
+    case "cylinder":
+      return <Cylinder className="w-4 h-4" />
+    default:
+      return <Box className="w-4 h-4" />
     }
   }
 

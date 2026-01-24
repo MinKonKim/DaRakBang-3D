@@ -1,13 +1,13 @@
-import { ScrollArea } from '@/shared/ui'
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import { ScrollArea } from "@/shared/ui"
+import type { Meta, StoryObj } from "@storybook/nextjs"
 
 const meta = {
-  title: 'UI/ScrollArea',
+  title: "UI/ScrollArea",
   component: ScrollArea,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof ScrollArea>
 
 export default meta
