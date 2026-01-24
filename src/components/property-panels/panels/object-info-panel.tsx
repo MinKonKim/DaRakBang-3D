@@ -31,7 +31,7 @@ export const ObjectInfoPanel = () => {
   return (
     <>
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader>
           <CardTitle className="flex items-center justify-between text-base">
             <div className="flex items-center gap-3">
               <div

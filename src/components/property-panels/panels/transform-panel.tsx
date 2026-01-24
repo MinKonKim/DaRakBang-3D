@@ -42,22 +42,23 @@ export const TransformPanel = () => {
   }
 
   return (
-    <>
-      {transformProperties.map(({ key, label, icon: Icon, step, min }) => (
-        <Card key={key}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2">
+    <Card>
+      <CardHeader className="border-b-1">
+        <CardTitle>Transform</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-2">
+        {transformProperties.map(({ key, label, icon: Icon, step, min }) => (
+          <div key={key} className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
               <Icon className="w-4 h-4" />
-              <span className="hidden sm:inline">{label}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <span>{label}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
               {(["x", "y", "z"] as const).map(axis => (
-                <div key={axis}>
-                  <Label htmlFor={`${key}-${axis}`} className="text-xs font-medium uppercase">
+                <div key={axis} className="relative">
+                  <div className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground uppercase pointer-events-none">
                     {axis}
-                  </Label>
+                  </div>
                   <Input
                     id={`${key}-${axis}`}
                     type="number"
@@ -65,15 +66,15 @@ export const TransformPanel = () => {
                     min={min}
                     value={String(selectedObject[key]?.[axis] ?? 0)}
                     onChange={e => handleVectorChange(key, axis, parseFloat(e.target.value) || 0)}
-                    className="mt-1 h-8"
+                    className="pl-5 h-8" 
                     disabled={!isEditMode}
                   />
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
   )
 }
