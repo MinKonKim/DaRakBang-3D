@@ -1,43 +1,71 @@
-"use client"
+'use client'
 import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
+import { Select } from "@react-three/postprocessing"
 import { ThreeEvent } from "@react-three/fiber"
 import React from "react"
 import { Box } from "../objects/3d"
 
-// 이 컴포넌트는 이제 전체 objectInfo 대신 objectId만 prop으로 받습니다.
 interface SceneObjectProps {
   objectId: string
   isSelected: boolean
 }
 
 export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.ReactNode => {
-  // ID를 사용하여 최적화된 훅으로 객체의 상세 정보를 가져옵니다.
-  // 이 컴포넌트는 이 특정 객체의 데이터가 변경될 때만 리렌더링됩니다.
   const objectInfo = useObjectById(objectId)
   const selectObject = useObjectStore(state => state.selectObject)
+  // --- 호버 상태 및 액션 가져오기 ---
+  const hoveredObjectId = useObjectStore(state => state.hoveredObjectId)
+  const setHoveredObjectId = useObjectStore(state => state.setHoveredObjectId)
 
-  // 데이터가 로드되지 않았거나, 삭제된 경우를 대비한 방어 코드
   if (!objectInfo) {
     return null
   }
 
+  // 현재 이 오브젝트가 호버 상태인지 확인
+  const isHovered = hoveredObjectId === objectId
+
+  // 클릭 이벤트 처리
   const handleClick = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
     selectObject(objectInfo.id)
   }
 
-  switch (objectInfo.type) {
-  case "box":
-    return (
-      <Box
-        objectInfo={objectInfo}
-        isSelected={isSelected}
-        onClick={handleClick}
-      />
-    )
-    // 다른 타입의 오브젝트가 추가되면 여기에 case를 추가합니다.
-  default:
-    return null
+  // 마우스 진입 시 (Hover Start)
+  const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    setHoveredObjectId(objectId)
   }
+
+  // 마우스 이탈 시 (Hover End)
+  const handlePointerOut = () => {
+    setHoveredObjectId(null)
+  }
+
+  // 오브젝트 타입을 렌더링하고 인터랙션 이벤트를 주입합니다.
+  const renderContent = () => {
+    switch (objectInfo.type) {
+      case "box":
+        return (
+          <Box
+            objectInfo={objectInfo}
+            isSelected={isSelected}
+            onClick={handleClick}
+            onPointerOver={handlePointerOver}
+            onPointerOut={handlePointerOut}
+          />
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    /* Select: EffectComposer 내의 Outline 패스와 연동됩니다. 
+      enabled가 true일 때 해당 메쉬에 외곽선 효과가 나타납니다.
+    */
+    <Select enabled={isHovered || isSelected}>
+      {renderContent()}
+    </Select>
+  )
 }

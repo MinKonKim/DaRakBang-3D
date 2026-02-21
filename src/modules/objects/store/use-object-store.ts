@@ -2,19 +2,18 @@ import { Object3DInfo } from "@/shared/types"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 
-// 스토어의 상태(state)와 액션(actions)에 대한 인터페이스 정의
 interface ObjectStoreState {
-  // 데이터 정규화: 객체 배열 대신, ID를 키로 하는 객체 맵(Record)을 사용하여
-  // 특정 객체에 대한 접근 및 업데이트 성능을 향상시킵니다.
   objects: Record<string, Object3DInfo>
-  // 객체의 순서를 유지하고, 맵(map)을 통한 렌더링을 위해 ID 배열을 별도로 관리합니다.
   objectIds: string[]
-  // 현재 선택된 객체의 ID. null일 경우 선택된 객체가 없음을 의미합니다.
   selectedObjectId: string | null
+  // --- 추가된 상태 ---
+  hoveredObjectId: string | null 
 
   // --- Actions ---
   addObject: (type: "box" | "sphere" | "cylinder") => void
   selectObject: (id: string | null) => void
+  // --- 추가된 액션 ---
+  setHoveredObjectId: (id: string | null) => void 
   updateObjectProperty: (id: string, property: string, value: any) => void
   updateObjectTransform: (
     id: string,
@@ -26,12 +25,12 @@ interface ObjectStoreState {
 
 export const useObjectStore = create<ObjectStoreState>()(
   subscribeWithSelector((set, get) => ({
-    // --- 초기 상태 ---
     objects: {},
     objectIds: [],
     selectedObjectId: null,
+    // --- 초기 상태 설정 ---
+    hoveredObjectId: null, 
 
-    // --- 액션 구현부 ---
     addObject: type => {
       const id = `${type}_${Date.now()}`
       const newObject: Object3DInfo = {
@@ -45,16 +44,20 @@ export const useObjectStore = create<ObjectStoreState>()(
         color: "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"),
       }
 
-      // 상태 업데이트: 정규화된 구조에 맞춰 objects 맵과 objectIds 배열을 모두 업데이트합니다.
       set(state => ({
         objects: { ...state.objects, [id]: newObject },
         objectIds: [...state.objectIds, id],
-        selectedObjectId: newObject.id, // 새로 추가된 객체를 자동으로 선택합니다.
+        selectedObjectId: newObject.id,
       }))
     },
 
     selectObject: id => {
       set({ selectedObjectId: id })
+    },
+
+    // --- 호버 액션 구현 ---
+    setHoveredObjectId: id => {
+      set({ hoveredObjectId: id })
     },
 
     updateObjectProperty: (id, property, value) => {
@@ -85,7 +88,6 @@ export const useObjectStore = create<ObjectStoreState>()(
     },
 
     deleteObject: id => {
-      // get()을 사용하여 현재 상태에 접근, 불변성을 유지하며 새 상태를 만듭니다.
       const state = get()
       const newObjects = { ...state.objects }
       delete newObjects[id]
@@ -94,8 +96,9 @@ export const useObjectStore = create<ObjectStoreState>()(
       set({
         objects: newObjects,
         objectIds: newObjectIds,
-        // 삭제된 객체가 현재 선택된 객체였다면, 선택을 해제합니다.
         selectedObjectId: state.selectedObjectId === id ? null : state.selectedObjectId,
+        // 삭제 시 호버 상태도 초기화
+        hoveredObjectId: state.hoveredObjectId === id ? null : state.hoveredObjectId, 
       })
     },
   })),

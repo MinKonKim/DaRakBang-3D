@@ -1,5 +1,9 @@
 import { Object3DInfo } from "@/shared/types/editor-type"
 import * as THREE from "three"
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js"
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js"
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass.js"
+
 export class SceneManager {
   scene: THREE.Scene
   camera: THREE.PerspectiveCamera
@@ -8,6 +12,8 @@ export class SceneManager {
   mouse: THREE.Vector2
   objectMeshes: Map<string, THREE.Mesh>
   onObjectClick: (id: string | null) => void
+  composer: EffectComposer
+  outlinePass: OutlinePass
 
   constructor(canvas: HTMLCanvasElement, onObjectClick: (id: string | null) => void) {
     this.objectMeshes = new Map()
@@ -34,6 +40,26 @@ export class SceneManager {
     this.renderer.setSize(canvas.offsetWidth, canvas.offsetHeight)
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
+    // Post-processing setup
+    this.composer = new EffectComposer(this.renderer)
+    
+    // 1. Render Pass (Basic Scene)
+    const renderPass = new RenderPass(this.scene, this.camera)
+    this.composer.addPass(renderPass)
+
+    // 2. Outline Pass
+    this.outlinePass = new OutlinePass(
+        new THREE.Vector2(canvas.offsetWidth, canvas.offsetHeight),
+        this.scene,
+        this.camera
+    )
+    this.outlinePass.visibleEdgeColor.setHex(0xffffff) // White visible edges
+    this.outlinePass.hiddenEdgeColor.setHex(0xffffff)  // White hidden edges (optional, can be different)
+    this.outlinePass.edgeStrength = 5
+    this.outlinePass.edgeGlow = 0
+    this.outlinePass.edgeThickness = 1
+    this.composer.addPass(this.outlinePass)
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
@@ -111,18 +137,25 @@ export class SceneManager {
   }
 
   highlightObject(id: string | null) {
-    // Reset all object materials
-    this.objectMeshes.forEach(mesh => {
-      ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x000000)
-    })
+      // Clear previous selection in OutlinePass
+      this.outlinePass.selectedObjects = []
+      
+    //   // Reset all object materials (optional if we don't want emissive anymore)
+    //   this.objectMeshes.forEach(mesh => {
+    //     ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x000000)
+    //   })
+  
+      // Highlight selected object
+      if (id) {
+        const mesh = this.objectMeshes.get(id)
+        if (mesh) {
+        //   // Emissive (optional, keep or remove depending on preference)
+        //   ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x333333)
 
-    // Highlight selected object
-    if (id) {
-      const mesh = this.objectMeshes.get(id)
-      if (mesh) {
-        ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x333333)
+          // Add to OutlinePass
+          this.outlinePass.selectedObjects = [mesh]
+        }
       }
-    }
   }
 
   onCanvasClick(event: MouseEvent) {
@@ -148,11 +181,14 @@ export class SceneManager {
     this.camera.aspect = canvas.offsetWidth / canvas.offsetHeight
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(canvas.offsetWidth, canvas.offsetHeight)
+    this.composer.setSize(canvas.offsetWidth, canvas.offsetHeight) // Update composer size
   }
 
   animate() {
     requestAnimationFrame(this.animate.bind(this))
-    this.renderer.render(this.scene, this.camera)
+    // Replace renderer.render with composer.render
+    this.composer.render()
   }
 }
+
 
