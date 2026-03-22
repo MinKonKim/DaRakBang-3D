@@ -24,13 +24,11 @@ const nextConfig: NextConfig = {
     return config
   },
 
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        three: "three",
-        "three/addons": "three/examples/jsm",
-        "three/examples/jsm": "three/examples/jsm",
-      },
+  turbopack: {
+    resolveAlias: {
+      three: "three",
+      "three/addons": "three/examples/jsm",
+      "three/examples/jsm": "three/examples/jsm",
     },
   },
   // 개발 편의를 위해 소스맵은 프로젝트 규모가 커지기 전까지 켜두는 것을 권장하지만, 
