@@ -1,14 +1,6 @@
 import { getUserList, insertUser } from "@/modules/users/services";
 import { UserInsertType } from "@/modules/users/type";
-import { NextParsedUrlQuery } from "next/dist/server/request-meta";
-import { NextRequest, NextResponse } from "next/server";
-
-// 컨텍스트(context) 객체 타입을 명시적으로 정의하면 좋습니다.
-interface RouteContext {
-  params: {
-    userId: string;
-  };
-}
+import { NextResponse } from "next/server";
 
 export const GET = async()=>{
   const response = await getUserList()

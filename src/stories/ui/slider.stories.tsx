@@ -41,14 +41,16 @@ export const WithSteps: Story = {
   },
 }
 
+const InteractiveSlider = () => {
+  const [value, setValue] = useState([50])
+  return (
+    <div className='w-[300px] space-y-4'>
+      <Slider value={value} onValueChange={setValue} max={100} step={1} />
+      <div className='text-sm text-center'>Value: {value[0]}</div>
+    </div>
+  )
+}
+
 export const Interactive: Story = {
-  render: () => {
-    const [value, setValue] = useState([50])
-    return (
-      <div className='w-[300px] space-y-4'>
-        <Slider value={value} onValueChange={setValue} max={100} step={1} />
-        <div className='text-sm text-center'>Value: {value[0]}</div>
-      </div>
-    )
-  },
+  render: () => <InteractiveSlider />,
 }

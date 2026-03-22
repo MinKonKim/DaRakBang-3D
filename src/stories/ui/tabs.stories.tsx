@@ -27,7 +27,7 @@ export const Default: Story = {
           </CardHeader>
           <CardContent className='space-y-2'>
             <p className='text-sm text-muted-foreground'>
-              Make changes to your account here. Click save when you're done.
+              Make changes to your account here. Click save when you&apos;re done.
             </p>
           </CardContent>
         </Card>
@@ -39,7 +39,7 @@ export const Default: Story = {
           </CardHeader>
           <CardContent className='space-y-2'>
             <p className='text-sm text-muted-foreground'>
-              Change your password here. After saving, you'll be logged out.
+              Change your password here. After saving, you&apos;ll be logged out.
             </p>
           </CardContent>
         </Card>

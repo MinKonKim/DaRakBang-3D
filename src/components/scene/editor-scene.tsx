@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { GroundPlane } from "@/components/editor/ground-plane"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
@@ -60,11 +60,11 @@ export const EditorScene = () => {
           <pointLight position={[-10, 10, -10]} intensity={0.5} />
 
           {/* 그리드 및 바닥 */}
-          <Grid 
-            args={[20, 20]} 
-            position={[0, -0.01, 0]} 
-            cellColor="#666666" 
-            sectionColor="#888888" 
+          <Grid
+            args={[20, 20]}
+            position={[0, -0.01, 0]}
+            cellColor="#666666"
+            sectionColor="#888888"
             fadeDistance={30}
           />
           <GroundPlane />

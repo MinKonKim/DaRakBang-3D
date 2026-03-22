@@ -29,7 +29,7 @@ export const Right: Story = {
       <SheetContent side='right'>
         <SheetHeader>
           <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>Make changes to your profile here. Click save when you're done.</SheetDescription>
+          <SheetDescription>Make changes to your profile here. Click save when you&apos;re done.</SheetDescription>
         </SheetHeader>
         <div className='grid gap-4 py-4'>
           <p className='text-sm'>Sheet content goes here</p>

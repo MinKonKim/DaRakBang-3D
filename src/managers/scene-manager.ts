@@ -43,16 +43,16 @@ export class SceneManager {
 
     // Post-processing setup
     this.composer = new EffectComposer(this.renderer)
-    
+
     // 1. Render Pass (Basic Scene)
     const renderPass = new RenderPass(this.scene, this.camera)
     this.composer.addPass(renderPass)
 
     // 2. Outline Pass
     this.outlinePass = new OutlinePass(
-        new THREE.Vector2(canvas.offsetWidth, canvas.offsetHeight),
-        this.scene,
-        this.camera
+      new THREE.Vector2(canvas.offsetWidth, canvas.offsetHeight),
+      this.scene,
+      this.camera,
     )
     this.outlinePass.visibleEdgeColor.setHex(0xffffff) // White visible edges
     this.outlinePass.hiddenEdgeColor.setHex(0xffffff)  // White hidden edges (optional, can be different)
@@ -137,25 +137,25 @@ export class SceneManager {
   }
 
   highlightObject(id: string | null) {
-      // Clear previous selection in OutlinePass
-      this.outlinePass.selectedObjects = []
-      
+    // Clear previous selection in OutlinePass
+    this.outlinePass.selectedObjects = []
+
     //   // Reset all object materials (optional if we don't want emissive anymore)
     //   this.objectMeshes.forEach(mesh => {
     //     ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x000000)
     //   })
-  
-      // Highlight selected object
-      if (id) {
-        const mesh = this.objectMeshes.get(id)
-        if (mesh) {
+
+    // Highlight selected object
+    if (id) {
+      const mesh = this.objectMeshes.get(id)
+      if (mesh) {
         //   // Emissive (optional, keep or remove depending on preference)
         //   ;(mesh.material as THREE.MeshLambertMaterial).emissive.setHex(0x333333)
 
-          // Add to OutlinePass
-          this.outlinePass.selectedObjects = [mesh]
-        }
+        // Add to OutlinePass
+        this.outlinePass.selectedObjects = [mesh]
       }
+    }
   }
 
   onCanvasClick(event: MouseEvent) {

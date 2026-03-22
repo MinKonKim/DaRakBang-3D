@@ -10,12 +10,11 @@ export default function UserPage(){
     name :"홍길동",
   }
   const handleGetUserButtonClick =async()=>{
-    const response = await usersInstance.get("/1")
+    await usersInstance.get("/1")
   }
 
   const handleInsertUserButtonClick =async()=>{
-    const response  = await usersInstance.post("/1",mockUser)
-
+    await usersInstance.post("/1",mockUser)
   }
 
   return (

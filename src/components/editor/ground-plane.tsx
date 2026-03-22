@@ -1,5 +1,4 @@
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
-import { Plane } from "@react-three/drei"
 import { ThreeEvent } from "@react-three/fiber"
 
 export const GroundPlane = () => {

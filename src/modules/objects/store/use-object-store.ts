@@ -7,13 +7,13 @@ interface ObjectStoreState {
   objectIds: string[]
   selectedObjectId: string | null
   // --- 추가된 상태 ---
-  hoveredObjectId: string | null 
+  hoveredObjectId: string | null
 
   // --- Actions ---
   addObject: (type: "box" | "sphere" | "cylinder") => void
   selectObject: (id: string | null) => void
   // --- 추가된 액션 ---
-  setHoveredObjectId: (id: string | null) => void 
+  setHoveredObjectId: (id: string | null) => void
   updateObjectProperty: (id: string, property: string, value: any) => void
   updateObjectTransform: (
     id: string,
@@ -29,7 +29,7 @@ export const useObjectStore = create<ObjectStoreState>()(
     objectIds: [],
     selectedObjectId: null,
     // --- 초기 상태 설정 ---
-    hoveredObjectId: null, 
+    hoveredObjectId: null,
 
     addObject: type => {
       const id = `${type}_${Date.now()}`
@@ -98,7 +98,7 @@ export const useObjectStore = create<ObjectStoreState>()(
         objectIds: newObjectIds,
         selectedObjectId: state.selectedObjectId === id ? null : state.selectedObjectId,
         // 삭제 시 호버 상태도 초기화
-        hoveredObjectId: state.hoveredObjectId === id ? null : state.hoveredObjectId, 
+        hoveredObjectId: state.hoveredObjectId === id ? null : state.hoveredObjectId,
       })
     },
   })),

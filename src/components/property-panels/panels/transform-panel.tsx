@@ -1,7 +1,7 @@
 import { usePropertyManager } from "@/managers/hooks/use-property-manager"
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Input, Label } from "@/shared/ui"
+import { Input } from "@/shared/ui"
 import { BasePanel } from "./base-panel"
 import { LucideIcon, Move3D, RotateCcw, Scale } from "lucide-react"
 

@@ -4,9 +4,6 @@
  * @returns {number[]} - [x, y, z] 형태의 배열
  */
 
-import { Vector3 } from "three";
-
-
 
 export const  pointToArray=(point : {x:number, y:number,z:number }) :[x:number,y:number,z:number] => {
   if (

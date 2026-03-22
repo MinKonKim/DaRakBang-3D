@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Select } from "@react-three/postprocessing"
@@ -45,23 +45,23 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
   // 오브젝트 타입을 렌더링하고 인터랙션 이벤트를 주입합니다.
   const renderContent = () => {
     switch (objectInfo.type) {
-      case "box":
-        return (
-          <Box
-            objectInfo={objectInfo}
-            isSelected={isSelected}
-            onClick={handleClick}
-            onPointerOver={handlePointerOver}
-            onPointerOut={handlePointerOut}
-          />
-        )
-      default:
-        return null
+    case "box":
+      return (
+        <Box
+          objectInfo={objectInfo}
+          isSelected={isSelected}
+          onClick={handleClick}
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
+        />
+      )
+    default:
+      return null
     }
   }
 
   return (
-    /* Select: EffectComposer 내의 Outline 패스와 연동됩니다. 
+    /* Select: EffectComposer 내의 Outline 패스와 연동됩니다.
       enabled가 true일 때 해당 메쉬에 외곽선 효과가 나타납니다.
     */
     <Select enabled={isHovered || isSelected}>
