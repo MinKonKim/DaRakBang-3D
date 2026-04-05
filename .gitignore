@@ -42,6 +42,8 @@ next-env.d.ts
 
 # GEMINI
 GEMINI.md
+CLAUDE.md
+
 # Vscode
 settings.json
 *.vscode/*
@@ -50,3 +52,6 @@ storybook-static
 
 # agent
 .agent
+
+# docs
+TODO.md
