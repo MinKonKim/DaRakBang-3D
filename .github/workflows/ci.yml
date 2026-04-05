@@ -13,15 +13,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v4
         with:
           version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
@@ -32,7 +32,16 @@ jobs:
       - name: Type check
         run: pnpm tsc --noEmit
 
-      - name: Lint
+      - name: Lint (auto-fix)
+        run: pnpm lint:fix
+
+      - name: Commit lint auto-fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-fix lint errors [skip ci]"
+          file_pattern: "src/**/*.ts src/**/*.tsx"
+
+      - name: Lint (verify no remaining errors)
         run: pnpm lint
 
       - name: Test
@@ -43,7 +52,7 @@ jobs:
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: coverage-report
