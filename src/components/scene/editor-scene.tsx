@@ -4,6 +4,7 @@ import { GroundPlane } from "@/components/editor/ground-plane"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Grid, OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
+import React, { useRef } from "react"
 import { SceneObject } from "./scene-object"
 
 /**
@@ -16,12 +17,36 @@ export const EditorScene = () => {
   const selectedObjectId = useObjectStore(state => state.selectedObjectId)
   const selectObject = useObjectStore(state => state.selectObject)
 
+  // 드래그 vs 클릭 구분: 마우스 이동 거리로 판단
+  const pointerStart = useRef({ x: 0, y: 0 })
+  const wasDragging = useRef(false)
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerStart.current = { x: e.clientX, y: e.clientY }
+    wasDragging.current = false
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (e.buttons === 0) return
+    const dx = e.clientX - pointerStart.current.x
+    const dy = e.clientY - pointerStart.current.y
+    if (Math.sqrt(dx * dx + dy * dy) > 3) {
+      wasDragging.current = true
+    }
+  }
+
   const handleDeselect = () => {
-    selectObject(null)
+    if (!wasDragging.current) {
+      selectObject(null)
+    }
   }
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-muted/5">
+    <div
+      className="w-full h-full relative overflow-hidden bg-muted/5"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+    >
       <Canvas
         shadows
         camera={{

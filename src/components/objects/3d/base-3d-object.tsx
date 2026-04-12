@@ -1,4 +1,5 @@
 "use client"
+import { Outlines } from "@react-three/drei"
 import { pointToArray } from "@/modules/objects/utils/transform-convert"
 import { Object3DInfo } from "@/shared/types"
 import React from "react"
@@ -11,18 +12,12 @@ interface BaseObjectProps extends React.ComponentProps<"group"> {
   children: React.ReactNode // geometry만 받음
 }
 
+// 형광 주황: R/G/B 값을 1.0 이상으로 설정해 HDR 밝기 표현
+const SELECTED_COLOR = new THREE.Color(2.5, 0.5, 0)
+
 export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
   ({ objectInfo, isSelected, isHovered = false, children, ...props }, ref) => {
     const { position, rotation, scale } = objectInfo
-
-    // 선택: 강한 오렌지 emissive / 호버: 미세한 흰빛 / 기본: 없음
-    const emissiveColor = isSelected
-      ? new THREE.Color("#cc4400")
-      : isHovered
-        ? new THREE.Color("#444444")
-        : new THREE.Color("#000000")
-
-    const emissiveIntensity = isSelected ? 0.6 : isHovered ? 0.2 : 0
 
     return (
       <group
@@ -34,11 +29,9 @@ export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
       >
         <mesh castShadow receiveShadow>
           {children}
-          <meshStandardMaterial
-            color={objectInfo.color || "#ffffff"}
-            emissive={emissiveColor}
-            emissiveIntensity={emissiveIntensity}
-          />
+          <meshStandardMaterial color={objectInfo.color || "#ffffff"} />
+          {isSelected && <Outlines thickness={4} color={SELECTED_COLOR} />}
+          {!isSelected && isHovered && <Outlines thickness={2} color="#aaaaaa" />}
         </mesh>
       </group>
     )
