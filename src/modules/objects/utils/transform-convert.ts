@@ -7,13 +7,13 @@ type Point3D = { x: number; y: number; z: number }
  * @param point 검사할 객체
  * @returns 유효한 경우 true, 그렇지 않으면 false
  */
-const isValidPoint3D = (point: any): point is Point3D => {
+const isValidPoint3D = (point: unknown): point is Point3D => {
   return (
-    point &&
+    point !== null &&
     typeof point === "object" &&
-    typeof point.x === "number" &&
-    typeof point.y === "number" &&
-    typeof point.z === "number"
+    typeof (point as Point3D).x === "number" &&
+    typeof (point as Point3D).y === "number" &&
+    typeof (point as Point3D).z === "number"
   )
 }
 

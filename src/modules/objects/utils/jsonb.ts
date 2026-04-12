@@ -1,5 +1,11 @@
 import { Euler, Object3D, Vector3 } from "three"
 
+type TransformJSONB = {
+  position?: [number, number, number]
+  rotation?: [number, number, number]
+  scale?: [number, number, number]
+}
+
 export const toJSONB = (obj: Object3D) => {
   return {
     position: [obj.position.x, obj.position.y, obj.position.z],
@@ -8,7 +14,7 @@ export const toJSONB = (obj: Object3D) => {
   } as const
 }
 
-export const parseJSONB = (jsonb: any) => {
+export const parseJSONB = (jsonb: TransformJSONB) => {
   return {
     position: new Vector3(...(jsonb?.position ?? [0, 0, 0])),
     rotation: new Euler(...(jsonb?.rotation ?? [0, 0, 0])),
@@ -16,7 +22,7 @@ export const parseJSONB = (jsonb: any) => {
   }
 }
 
-export const applyJSONB = (obj: Object3D, jsonb: any) => {
+export const applyJSONB = (obj: Object3D, jsonb: TransformJSONB) => {
   const transform = parseJSONB(jsonb)
 
   obj.position.copy(transform.position)

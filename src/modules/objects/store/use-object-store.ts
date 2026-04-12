@@ -1,6 +1,7 @@
 import { Object3DInfo } from "@/shared/types"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
+import { Vector3Like } from "three"
 
 interface ObjectStoreState {
   objects: Record<string, Object3DInfo>
@@ -14,10 +15,10 @@ interface ObjectStoreState {
   selectObject: (id: string | null) => void
   // --- 추가된 액션 ---
   setHoveredObjectId: (id: string | null) => void
-  updateObjectProperty: (id: string, property: string, value: any) => void
+  updateObjectProperty: (id: string, property: keyof Object3DInfo, value: unknown) => void
   updateObjectTransform: (
     id: string,
-    transform: Partial<{ position: any; rotation: any; scale: any }>,
+    transform: Partial<{ position: Vector3Like; rotation: Vector3Like; scale: Vector3Like }>,
   ) => void
   toggleObjectVisibility: (id: string) => void
   deleteObject: (id: string) => void
