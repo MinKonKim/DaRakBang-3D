@@ -43,11 +43,10 @@ export function EditorSidebar() {
 
   return (
     <Card className="w-full h-full rounded-none border-l border-t-0 border-r-0 border-b-0 flex flex-col">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 shrink-0">
         <CardTitle className="flex items-center justify-between text-lg">
           <span className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
-            {/* sm 브레이크포인트 이상에서만 텍스트가 보이도록 하여 반응형 처리 */}
             <span className="hidden sm:inline">Editor Panel</span>
           </span>
           <div className="flex items-center gap-1">
@@ -70,14 +69,14 @@ export function EditorSidebar() {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-0 flex-1 h-full flex flex-col">
+      {/* min-h-0: flex 자식이 콘텐츠 크기로 무한 확장되는 것을 방지 */}
+      <CardContent className="p-0 flex-1 flex flex-col min-h-0">
         <Tabs
           value={activePanel}
           onValueChange={v => setActivePanel(v as "objects" | "properties" | "materials")}
-          className="h-full flex flex-col"
+          className="flex-1 flex flex-col min-h-0"
         >
-          {/* 여백을 px-6에서 px-4로 줄여 공간 활용도를 높입니다. */}
-          <div className="px-4 pb-3">
+          <div className="px-4 pb-3 shrink-0">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="objects" className="flex items-center gap-2">
                 <Layers className="w-4 h-4" />
@@ -93,9 +92,9 @@ export function EditorSidebar() {
             </TabsList>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <TabsContent value="objects" className="h-full m-0">
-              {/* 여백을 px-6에서 px-4로 줄입니다. */}
+          {/* overflow-hidden: 자식의 h-full이 올바른 높이 기준점을 갖도록 제한 */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <TabsContent value="objects" className="h-full m-0 overflow-y-auto">
               <div className="px-4 pb-4">
                 <Card className="mb-4">
                   <CardHeader className="pb-2">
@@ -105,7 +104,6 @@ export function EditorSidebar() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    {/* grid 대신 flex와 flex-wrap을 사용하여 반응형으로 줄바꿈되도록 합니다. */}
                     <div className="flex flex-wrap gap-2">
                       <Button
                         onClick={() => addObject("box")}

@@ -4,20 +4,20 @@ import React from "react"
 import * as THREE from "three"
 import { BaseObject } from "./base-3d-object"
 
-interface BoxProps extends React.ComponentProps<"group"> {
+interface SphereProps extends React.ComponentProps<"group"> {
   objectInfo: Object3DInfo
   isSelected: boolean
   isHovered?: boolean
 }
 
-export const Box = React.forwardRef<THREE.Group, BoxProps>(
+export const Sphere = React.forwardRef<THREE.Group, SphereProps>(
   ({ objectInfo, isSelected, isHovered, ...props }, ref) => {
     return (
       <BaseObject ref={ref} objectInfo={objectInfo} isSelected={isSelected} isHovered={isHovered} {...props}>
-        <boxGeometry args={[1, 1, 1]} />
+        <sphereGeometry args={[0.5, 32, 32]} />
       </BaseObject>
     )
   },
 )
 
-Box.displayName = "Box"
+Sphere.displayName = "Sphere"

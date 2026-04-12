@@ -4,20 +4,20 @@ import React from "react"
 import * as THREE from "three"
 import { BaseObject } from "./base-3d-object"
 
-interface BoxProps extends React.ComponentProps<"group"> {
+interface CylinderProps extends React.ComponentProps<"group"> {
   objectInfo: Object3DInfo
   isSelected: boolean
   isHovered?: boolean
 }
 
-export const Box = React.forwardRef<THREE.Group, BoxProps>(
+export const Cylinder = React.forwardRef<THREE.Group, CylinderProps>(
   ({ objectInfo, isSelected, isHovered, ...props }, ref) => {
     return (
       <BaseObject ref={ref} objectInfo={objectInfo} isSelected={isSelected} isHovered={isHovered} {...props}>
-        <boxGeometry args={[1, 1, 1]} />
+        <cylinderGeometry args={[0.5, 0.5, 1, 32]} />
       </BaseObject>
     )
   },
 )
 
-Box.displayName = "Box"
+Cylinder.displayName = "Cylinder"

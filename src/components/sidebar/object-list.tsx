@@ -1,3 +1,4 @@
+import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useObjectById } from "@/modules/objects/store/use-object-by-id"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Button } from "@/shared/ui/button"
@@ -5,22 +6,18 @@ import { ScrollArea } from "@/shared/ui/scroll-area"
 import { Box, Circle, Cylinder, Eye, EyeOff, Trash2 } from "lucide-react"
 import React from "react"
 
-// 개별 객체 항목을 렌더링하는 최적화된 하위 컴포넌트
 const ObjectListItem = React.memo(({ objectId }: { objectId: string }) => {
-  // useObjectById 훅을 사용하여, 이 컴포넌트는 ID에 해당하는 객체의 데이터가
-  // 변경될 때만 리렌더링됩니다. 다른 객체가 변경되어도 영향을 받지 않습니다.
   const object = useObjectById(objectId)
   const { selectedObjectId, selectObject, toggleObjectVisibility, deleteObject } = useObjectStore()
+  const setActivePanel = useUIStore(state => state.setActivePanel)
 
-  // 이 컴포넌트가 렌더링되는 시점에는 object가 항상 존재해야 하지만,
-  // 만약의 경우를 대비하여 방어 코드를 추가합니다.
   if (!object) {
     return null
   }
 
   const getObjectIcon = (type: string) => {
     switch (type) {
-    case "box": // "cube"에서 "box"로 일관성을 위해 변경했습니다.
+    case "box":
       return <Box className="w-4 h-4" />
     case "sphere":
       return <Circle className="w-4 h-4" />
@@ -31,6 +28,11 @@ const ObjectListItem = React.memo(({ objectId }: { objectId: string }) => {
     }
   }
 
+  const handleSelect = () => {
+    selectObject(object.id)
+    setActivePanel("properties")
+  }
+
   return (
     <div
       className={`flex items-center justify-between p-2 rounded cursor-pointer transition-colors ${
@@ -38,7 +40,7 @@ const ObjectListItem = React.memo(({ objectId }: { objectId: string }) => {
           ? "bg-primary/10 border border-primary/20"
           : "hover:bg-muted/50"
       }`}
-      onClick={() => selectObject(object.id)}
+      onClick={handleSelect}
     >
       <div className="flex items-center gap-2 flex-1 min-w-0">
         {getObjectIcon(object.type)}
@@ -83,10 +85,7 @@ const ObjectListItem = React.memo(({ objectId }: { objectId: string }) => {
 })
 ObjectListItem.displayName = "ObjectListItem"
 
-// 객체 목록 전체를 렌더링하는 메인 컴포넌트
 export const ObjectsList = () => {
-  // 이 컴포넌트는 전체 ID 목록만 구독합니다.
-  // 따라서 개별 객체의 속성(이름, 색상 등)이 변경되어도 리렌더링되지 않습니다.
   const objectIds = useObjectStore(state => state.objectIds)
 
   return (
@@ -100,7 +99,6 @@ export const ObjectsList = () => {
           </div>
         ) : (
           <div className="space-y-1">
-            {/* ID 배열을 순회하며 각 항목을 렌더링합니다. */}
             {objectIds.map(id => (
               <ObjectListItem key={id} objectId={id} />
             ))}

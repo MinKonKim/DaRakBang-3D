@@ -1,26 +1,28 @@
 "use client"
 import { pointToArray } from "@/modules/objects/utils/transform-convert"
 import { Object3DInfo } from "@/shared/types"
-import { Outlines } from "@react-three/drei"
-import React, { useEffect, useRef } from "react"
+import React from "react"
 import * as THREE from "three"
 
-// BaseObject가 받을 Props 정의
-// R3F의 GroupProps 대신, 표준 React 타입을 사용하여 group 요소의 모든 속성(예: onPointerDown)을 포함시킵니다.
 interface BaseObjectProps extends React.ComponentProps<"group"> {
-  objectInfo: Object3DInfo // 위치, 회전, 크기 등 객체 정보
-  isSelected: boolean // 현재 선택되었는지 여부
-  children: React.ReactNode // <boxGeometry />, <meshStandardMaterial /> 등 고유한 모양
+  objectInfo: Object3DInfo
+  isSelected: boolean
+  isHovered?: boolean
+  children: React.ReactNode // geometry만 받음
 }
 
 export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
-  ({ objectInfo, isSelected, children, ...props }, ref) => {
+  ({ objectInfo, isSelected, isHovered = false, children, ...props }, ref) => {
     const { position, rotation, scale } = objectInfo
-    const meshRef = useRef<THREE.Mesh>(null!);
 
-    useEffect(() => {
-      console.log(Boolean(meshRef.current))
-    }, [])
+    // 선택: 강한 오렌지 emissive / 호버: 미세한 흰빛 / 기본: 없음
+    const emissiveColor = isSelected
+      ? new THREE.Color("#cc4400")
+      : isHovered
+        ? new THREE.Color("#444444")
+        : new THREE.Color("#000000")
+
+    const emissiveIntensity = isSelected ? 0.6 : isHovered ? 0.2 : 0
 
     return (
       <group
@@ -28,16 +30,14 @@ export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
         position={pointToArray(position)}
         rotation={pointToArray(rotation)}
         scale={pointToArray(scale)}
-        {...props} // onPointerDown 등의 이벤트 핸들러를 여기서 적용
+        {...props}
       >
-        <mesh  ref={meshRef} castShadow receiveShadow>
+        <mesh castShadow receiveShadow>
           {children}
-          {/* 선택되었을 때만 Outlines 표시 */}
-          <Outlines
-            thickness={0.03}
-            color={isSelected ? "#22ff22" : "transparent"}
-            screenspace={false}
-            angle={Math.PI}
+          <meshStandardMaterial
+            color={objectInfo.color || "#ffffff"}
+            emissive={emissiveColor}
+            emissiveIntensity={emissiveIntensity}
           />
         </mesh>
       </group>

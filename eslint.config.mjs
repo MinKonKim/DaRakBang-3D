@@ -16,6 +16,9 @@ const eslintConfig = [
     rules: {
       // any 타입 사용 시 경고 (노란색 물결줄)
       "@typescript-eslint/no-explicit-any": "warn",
+
+      // _ prefix 변수는 의도적 미사용으로 허용
+      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
       
       // 추가 코드 스타일 규칙
       quotes: ["error", "double"],
