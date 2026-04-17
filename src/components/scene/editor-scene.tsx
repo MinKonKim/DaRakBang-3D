@@ -5,6 +5,7 @@ import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { Grid, OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import React, { useRef } from "react"
+import { RoomWalls } from "../objects/3d"
 import { SceneObject } from "./scene-object"
 
 /**
@@ -76,6 +77,7 @@ export const EditorScene = () => {
           fadeDistance={30}
         />
         <GroundPlane />
+        <RoomWalls />
 
         {/* 3D 오브젝트 렌더링 */}
         {objectIds.map(id => (

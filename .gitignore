@@ -52,6 +52,6 @@ storybook-static
 
 # agent
 .agent
-
+.claude
 # docs
 ./TODO.md
