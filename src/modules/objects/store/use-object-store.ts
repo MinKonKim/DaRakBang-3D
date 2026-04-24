@@ -7,14 +7,23 @@ interface ObjectStoreState {
   objects: Record<string, Object3DInfo>
   objectIds: string[]
   selectedObjectId: string | null
-  // --- 추가된 상태 ---
   hoveredObjectId: string | null
+  // --- 드래그 상태 ---
+  draggingObjectId: string | null
+  dragStartPosition: { x: number; y: number; z: number } | null
+  // --- 충돌 상태 ---
+  collidingObjectIds: string[]
+  // --- 클립보드 ---
+  clipboardObject: Object3DInfo | null
 
   // --- Actions ---
   addObject: (type: "box" | "sphere" | "cylinder") => void
+  addClonedObject: (source: Object3DInfo) => string
   selectObject: (id: string | null) => void
-  // --- 추가된 액션 ---
   setHoveredObjectId: (id: string | null) => void
+  setDragging: (id: string | null, startPos: { x: number; y: number; z: number } | null) => void
+  setCollidingObjectIds: (ids: string[]) => void
+  copyToClipboard: (id: string) => void
   updateObjectProperty: (id: string, property: keyof Object3DInfo, value: unknown) => void
   updateObjectTransform: (
     id: string,
@@ -29,8 +38,11 @@ export const useObjectStore = create<ObjectStoreState>()(
     objects: {},
     objectIds: [],
     selectedObjectId: null,
-    // --- 초기 상태 설정 ---
     hoveredObjectId: null,
+    draggingObjectId: null,
+    dragStartPosition: null,
+    collidingObjectIds: [],
+    clipboardObject: null,
 
     addObject: type => {
       const id = `${type}_${Date.now()}`
@@ -44,7 +56,6 @@ export const useObjectStore = create<ObjectStoreState>()(
         visible: true,
         color: "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"),
       }
-
       set(state => ({
         objects: { ...state.objects, [id]: newObject },
         objectIds: [...state.objectIds, id],
@@ -52,13 +63,45 @@ export const useObjectStore = create<ObjectStoreState>()(
       }))
     },
 
+    addClonedObject: source => {
+      const id = `${source.type}_${Date.now()}`
+      const cloned: Object3DInfo = {
+        ...source,
+        id,
+        name: `${source.name} (복사)`,
+        position: {
+          x: source.position.x + 0.5,
+          y: source.position.y,
+          z: source.position.z + 0.5,
+        },
+      }
+      set(state => ({
+        objects: { ...state.objects, [id]: cloned },
+        objectIds: [...state.objectIds, id],
+        selectedObjectId: id,
+      }))
+      return id
+    },
+
     selectObject: id => {
       set({ selectedObjectId: id })
     },
 
-    // --- 호버 액션 구현 ---
     setHoveredObjectId: id => {
       set({ hoveredObjectId: id })
+    },
+
+    setDragging: (id, startPos) => {
+      set({ draggingObjectId: id, dragStartPosition: startPos })
+    },
+
+    setCollidingObjectIds: ids => {
+      set({ collidingObjectIds: ids })
+    },
+
+    copyToClipboard: id => {
+      const obj = get().objects[id]
+      if (obj) set({ clipboardObject: obj })
     },
 
     updateObjectProperty: (id, property, value) => {
@@ -93,13 +136,12 @@ export const useObjectStore = create<ObjectStoreState>()(
       const newObjects = { ...state.objects }
       delete newObjects[id]
       const newObjectIds = state.objectIds.filter(objectId => objectId !== id)
-
       set({
         objects: newObjects,
         objectIds: newObjectIds,
         selectedObjectId: state.selectedObjectId === id ? null : state.selectedObjectId,
-        // 삭제 시 호버 상태도 초기화
         hoveredObjectId: state.hoveredObjectId === id ? null : state.hoveredObjectId,
+        collidingObjectIds: state.collidingObjectIds.filter(cid => cid !== id),
       })
     },
   })),

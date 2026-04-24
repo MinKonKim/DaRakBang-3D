@@ -1,11 +1,13 @@
 "use client"
 
-import { GroundPlane } from "@/components/editor/ground-plane"
+import { commandManager } from "@/managers/command-manager"
+import { PasteObjectCommand } from "@/managers/commands/paste-object-command"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
-import { Grid, OrbitControls } from "@react-three/drei"
+import { ContactShadows, OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { RoomWalls } from "../objects/3d"
+import { DragPlane } from "./drag-plane"
 import { SceneObject } from "./scene-object"
 
 /**
@@ -16,6 +18,7 @@ import { SceneObject } from "./scene-object"
 export const EditorScene = () => {
   const objectIds = useObjectStore(state => state.objectIds)
   const selectedObjectId = useObjectStore(state => state.selectedObjectId)
+  const draggingObjectId = useObjectStore(state => state.draggingObjectId)
   const selectObject = useObjectStore(state => state.selectObject)
 
   // 드래그 vs 클릭 구분: 마우스 이동 거리로 판단
@@ -41,6 +44,28 @@ export const EditorScene = () => {
       selectObject(null)
     }
   }
+
+  // Ctrl+C / Ctrl+V 키보드 단축키
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMod = e.ctrlKey || e.metaKey
+
+      if (isMod && e.key === "c") {
+        const { selectedObjectId: id, copyToClipboard } = useObjectStore.getState()
+        if (id) copyToClipboard(id)
+      }
+
+      if (isMod && e.key === "v") {
+        const { clipboardObject } = useObjectStore.getState()
+        if (clipboardObject) {
+          commandManager.execute(new PasteObjectCommand(clipboardObject))
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
 
   return (
     <div
@@ -68,16 +93,24 @@ export const EditorScene = () => {
         />
         <pointLight position={[-10, 10, -10]} intensity={0.5} />
 
-        {/* 그리드 및 바닥 */}
-        <Grid
+        {/* 그리드 및 방 구조 (바닥 포함) */}
+        {/* <Grid
           args={[20, 20]}
           position={[0, -0.01, 0]}
           cellColor="#666666"
           sectionColor="#888888"
           fadeDistance={30}
-        />
-        <GroundPlane />
+        /> */}
         <RoomWalls />
+
+        {/* 실시간 ContactShadows: 바닥면 기준 */}
+        <ContactShadows
+          position={[0, -0.42, 0]}
+          opacity={0.4}
+          scale={12}
+          blur={1.5}
+          far={4}
+        />
 
         {/* 3D 오브젝트 렌더링 */}
         {objectIds.map(id => (
@@ -88,9 +121,13 @@ export const EditorScene = () => {
           />
         ))}
 
-        {/* 카메라 조작 */}
+        {/* 드래그 평면: 드래그 중에만 활성화 */}
+        <DragPlane />
+
+        {/* 카메라 조작: 오브젝트 드래그 중에는 비활성화 */}
         <OrbitControls
           makeDefault
+          enabled={!draggingObjectId}
           minDistance={2}
           maxDistance={100}
           maxPolarAngle={Math.PI / 2.1}

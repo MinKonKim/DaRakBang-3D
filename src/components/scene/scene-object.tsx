@@ -16,6 +16,8 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
   const selectObject = useObjectStore(state => state.selectObject)
   const hoveredObjectId = useObjectStore(state => state.hoveredObjectId)
   const setHoveredObjectId = useObjectStore(state => state.setHoveredObjectId)
+  const setDragging = useObjectStore(state => state.setDragging)
+  const collidingObjectIds = useObjectStore(state => state.collidingObjectIds)
   const setActivePanel = useUIStore(state => state.setActivePanel)
 
   if (!objectInfo) {
@@ -23,11 +25,17 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
   }
 
   const isHovered = hoveredObjectId === objectId
+  const isColliding = collidingObjectIds.includes(objectId)
 
-  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
     selectObject(objectInfo.id)
     setActivePanel("properties")
+    setDragging(objectInfo.id, { ...objectInfo.position })
+  }
+
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
   }
 
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
@@ -43,6 +51,8 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
     objectInfo,
     isSelected,
     isHovered,
+    isColliding,
+    onPointerDown: handlePointerDown,
     onClick: handleClick,
     onPointerOver: handlePointerOver,
     onPointerOut: handlePointerOut,

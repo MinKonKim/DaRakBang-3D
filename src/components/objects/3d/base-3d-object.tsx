@@ -9,14 +9,15 @@ interface BaseObjectProps extends React.ComponentProps<"group"> {
   objectInfo: Object3DInfo
   isSelected: boolean
   isHovered?: boolean
+  isColliding?: boolean
   children: React.ReactNode // geometry만 받음
 }
 
-// 형광 주황: R/G/B 값을 1.0 이상으로 설정해 HDR 밝기 표현
-const SELECTED_COLOR = new THREE.Color(2.5, 0.5, 0)
+const SELECTED_COLOR = new THREE.Color(2.5, 0.5, 0)   // 형광 주황
+const COLLISION_COLOR = new THREE.Color(3.0, 0.0, 0.0) // 충돌 경고 빨강
 
 export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
-  ({ objectInfo, isSelected, isHovered = false, children, ...props }, ref) => {
+  ({ objectInfo, isSelected, isHovered = false, isColliding = false, children, ...props }, ref) => {
     const { position, rotation, scale } = objectInfo
 
     return (
@@ -30,8 +31,9 @@ export const BaseObject = React.forwardRef<THREE.Group, BaseObjectProps>(
         <mesh castShadow receiveShadow>
           {children}
           <meshStandardMaterial color={objectInfo.color || "#ffffff"} />
-          {isSelected && <Outlines thickness={4} color={SELECTED_COLOR} />}
-          {!isSelected && isHovered && <Outlines thickness={2} color="#aaaaaa" />}
+          {isColliding && <Outlines thickness={5} color={COLLISION_COLOR} />}
+          {!isColliding && isSelected && <Outlines thickness={4} color={SELECTED_COLOR} />}
+          {!isColliding && !isSelected && isHovered && <Outlines thickness={2} color="#aaaaaa" />}
         </mesh>
       </group>
     )
