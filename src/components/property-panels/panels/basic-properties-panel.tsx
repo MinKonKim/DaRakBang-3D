@@ -7,9 +7,9 @@ import { Box, Palette, PanelBottom, PanelLeft, Settings } from "lucide-react"
 import { BasePanel } from "./base-panel"
 
 const PLACEMENT_OPTIONS: { type: PlacementType; icon: React.ReactNode; label: string }[] = [
-  { type: "floor", icon: <PanelBottom className="w-4 h-4" />, label: "바닥 전용 (바오)" },
-  { type: "wall",  icon: <PanelLeft   className="w-4 h-4" />, label: "벽 전용 (벽오)"  },
-  { type: "both",  icon: <Box         className="w-4 h-4" />, label: "바닥+벽 모두"     },
+  { type: "floor", icon: <PanelBottom className="w-4 h-4" />, label: "바닥" },
+  { type: "wall",  icon: <PanelLeft   className="w-4 h-4" />, label: "벽"  },
+  { type: "both",  icon: <Box         className="w-4 h-4" />, label: "바닥+벽" },
 ]
 
 export const BasicPropertiesPanel = () => {

@@ -56,14 +56,14 @@ const WALL_ROTATION_Y: Record<WallFace, number> = {
 }
 
 /**
- * 현재 위치(x, z)에서 가장 가까운 벽이 WALL_SNAP_DIST 이내인지 감지
+ * 현재 위치(x, z)와 오브젝트의 절반 크기(halfW, halfD)를 기준으로 가장 가까운 벽을 감지
  */
-function detectNearestWall(x: number, z: number): WallFace | null {
+function detectNearestWall(x: number, z: number, halfW: number, halfD: number): WallFace | null {
   const dists: [WallFace, number][] = [
-    ["east",  INNER_X - x],
-    ["west",  INNER_X + x],
-    ["south", INNER_Z - z],
-    ["north", INNER_Z + z],
+    ["east",  INNER_X - (x + halfW)],
+    ["west",  (x - halfW) - (-INNER_X)],
+    ["south", INNER_Z - (z + halfD)],
+    ["north", (z - halfD) - (-INNER_Z)],
   ]
   const nearest = dists.reduce((a, b) => (a[1] < b[1] ? a : b))
   return nearest[1] <= WALL_SNAP_DIST ? nearest[0] : null
@@ -101,8 +101,8 @@ function computeWallPosition(
   switch (face) {
   case "north": return { x: snap(point.x), y: clampedY, z: -INNER_Z + scale.z / 2 }
   case "south": return { x: snap(point.x), y: clampedY, z:  INNER_Z - scale.z / 2 }
-  case "east":  return { x:  INNER_X - scale.x / 2, y: clampedY, z: snap(point.z) }
-  case "west":  return { x: -INNER_X + scale.x / 2, y: clampedY, z: snap(point.z) }
+  case "east":  return { x:  INNER_X - scale.z / 2, y: clampedY, z: snap(point.z) }
+  case "west":  return { x: -INNER_X + scale.z / 2, y: clampedY, z: snap(point.z) }
   }
 }
 
@@ -168,7 +168,7 @@ export const DragPlane = () => {
 
     // wall / both: 가장 가까운 벽 감지 → 벽면 모드 전환
     if (isWallCapable) {
-      const nearWall = detectNearestWall(newX, newZ)
+      const nearWall = detectNearestWall(newX, newZ, current.scale.x / 2, current.scale.z / 2)
       if (nearWall) {
         setActiveWall(nearWall)
         return // 다음 프레임부터 wall 핸들러가 처리
@@ -182,7 +182,8 @@ export const DragPlane = () => {
       newZ = snapped.z
     }
 
-    const newPos = { x: newX, y: current.scale.y / 2, z: newZ }
+    const baseY = GROUND_Y + THICKNESS / 2
+    const newPos = { x: newX, y: baseY + current.scale.y / 2, z: newZ }
     updateObjectTransform(draggingObjectId, { position: newPos })
 
     const updated = { ...store.objects, [draggingObjectId]: { ...current, position: newPos } }
@@ -199,6 +200,23 @@ export const DragPlane = () => {
     if (!current) return
 
     const newPos = computeWallPosition(activeWall, e.point, current.scale)
+
+    // Check if moving to another wall
+    // when calculating against the adjacent wall, rotation effectively swaps dimensions, but here we can just use the object's base scale loosely, or use scale.z/scale.x appropriately.
+    // To be precise, since it's already rotated on the current wall, its bounds depend on activeWall.
+    // Actually, detectNearestWall accepts halfW and halfD which are unrotated scales.
+    let effHalfW = current.scale.x / 2
+    let effHalfD = current.scale.z / 2
+    if (activeWall === "east" || activeWall === "west") {
+      effHalfW = current.scale.z / 2
+      effHalfD = current.scale.x / 2
+    }
+    const nearWall = detectNearestWall(newPos.x, newPos.z, effHalfW, effHalfD)
+    if (nearWall && nearWall !== activeWall) {
+      setActiveWall(nearWall)
+      return
+    }
+
     const newRot = { ...current.rotation, y: WALL_ROTATION_Y[activeWall] }
 
     updateObjectTransform(draggingObjectId, { position: newPos, rotation: newRot })
@@ -266,10 +284,11 @@ export const DragPlane = () => {
   }
 
   // 바닥 모드: 수평 XZ 평면 (기존 동작)
+  const baseY = GROUND_Y + THICKNESS / 2
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, 0.001, 0]}
+      position={[0, baseY + 0.001, 0]}
       onPointerMove={handleFloorPointerMove}
       onPointerUp={handlePointerUp}
     >
