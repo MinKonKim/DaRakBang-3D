@@ -1,10 +1,16 @@
 import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { useObjectStore } from "@/modules/objects/store/use-object-store"
 import { useSelectedObject } from "@/modules/objects/store/use-selected-object"
-import { Object3DInfo } from "@/shared/types"
-import { Input, Label } from "@/shared/ui"
-import { Palette, Settings } from "lucide-react"
+import { Object3DInfo, PlacementType } from "@/shared/types"
+import { Button, Input, Label, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/ui"
+import { Box, Palette, PanelBottom, PanelLeft, Settings } from "lucide-react"
 import { BasePanel } from "./base-panel"
+
+const PLACEMENT_OPTIONS: { type: PlacementType; icon: React.ReactNode; label: string }[] = [
+  { type: "floor", icon: <PanelBottom className="w-4 h-4" />, label: "바닥 전용 (바오)" },
+  { type: "wall",  icon: <PanelLeft   className="w-4 h-4" />, label: "벽 전용 (벽오)"  },
+  { type: "both",  icon: <Box         className="w-4 h-4" />, label: "바닥+벽 모두"     },
+]
 
 export const BasicPropertiesPanel = () => {
   const selectedObject = useSelectedObject()
@@ -68,6 +74,36 @@ export const BasicPropertiesPanel = () => {
                 placeholder="#ffffff"
                 disabled={!isEditMode}
               />
+            </div>
+          </div>
+
+          {/* Placement Type */}
+          <div>
+            <Label className="text-sm font-medium flex items-center gap-2">
+              <Box className="w-4 h-4" />
+              Placement
+            </Label>
+            <div className="flex gap-1 mt-1">
+              {PLACEMENT_OPTIONS.map(({ type, icon, label }) => (
+                <TooltipProvider key={type}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant={selectedObject.placementType === type ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePropertyChange("placementType", type)}
+                        className="flex-1"
+                        disabled={!isEditMode}
+                      >
+                        {icon}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
             </div>
           </div>
         </div>

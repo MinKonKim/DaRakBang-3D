@@ -1,4 +1,4 @@
-import { Object3DInfo } from "@/shared/types"
+import { Object3DInfo, PlacementType } from "@/shared/types"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { Vector3Like } from "three"
@@ -17,7 +17,7 @@ interface ObjectStoreState {
   clipboardObject: Object3DInfo | null
 
   // --- Actions ---
-  addObject: (type: "box" | "sphere" | "cylinder") => void
+  addObject: (type: "box" | "sphere" | "cylinder", placementType?: PlacementType) => void
   addClonedObject: (source: Object3DInfo) => string
   selectObject: (id: string | null) => void
   setHoveredObjectId: (id: string | null) => void
@@ -44,7 +44,7 @@ export const useObjectStore = create<ObjectStoreState>()(
     collidingObjectIds: [],
     clipboardObject: null,
 
-    addObject: type => {
+    addObject: (type, placementType = "both") => {
       const id = `${type}_${Date.now()}`
       const newObject: Object3DInfo = {
         id,
@@ -55,6 +55,7 @@ export const useObjectStore = create<ObjectStoreState>()(
         scale: { x: 1, y: 1, z: 1 },
         visible: true,
         color: "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"),
+        placementType,
       }
       set(state => ({
         objects: { ...state.objects, [id]: newObject },

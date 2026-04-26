@@ -87,12 +87,44 @@
 
 ---
 
-### Phase 3: 지능형 공간 구성 및 최적화 — ⏳ 예정
+### Phase 3: 오브젝트 배치 타입 시스템 — 🚧 진행 중
 
-- [ ] **3-1** rapier (wasm 기반) 물리 엔진 연동
+#### 3-A. PlacementType 속성 시스템 (2026-04-24)
+
+- [x] **3-A-1** `PlacementType = "floor" | "wall" | "both"` 도메인 모델 추가
+  > `src/shared/types/editor-type.ts` — `Object3DInfo.placementType` 필드 추가 (기본값 `"floor"`)
+- [x] **3-A-2** `addObject(type, placementType?)` 시그니처 확장
+  > `src/modules/objects/store/use-object-store.ts` — 두 번째 인자로 placementType 지정 가능
+- [x] **3-A-3** DragPlane 수직/수평 동적 전환 + 자동 회전
+  > `src/components/scene/drag-plane.tsx` 전면 리팩터
+  > - `"floor"`: 기존 XZ 수평 드래그 + `applyWallSnap()` 유지
+  > - `"wall"` / `"both"`: `WALL_SNAP_DIST` 이내 접근 시 수직 드래그 평면으로 자동 전환
+  > - 벽면 흡착 시 `outwardNormal` 기반 `rotation.y` 자동 적용 (방 안쪽을 바라봄)
+  > - `pointerUp` 시 position + rotation 각각 `UpdateTransformCommand` 등록 (Undo 지원)
+  > - 회전 테이블: north→PI, south→0, east→PI/2, west→-PI/2
+- [ ] **3-A-4** 속성 패널에서 `placementType` 표시 및 변경 UI
+  > Properties 탭 내 PlacementType 셀렉터 (floor / wall / both)
+- [ ] **3-A-5** 사이드바 Quick Add에서 wall/both 타입 오브젝트 추가 지원
+  > 현재 모두 `"floor"` 기본값 — 오브젝트 마켓플레이스 연동 시 확장
+
+---
+
+#### 3-B. 오브젝트 마켓플레이스 — ⏳ 예정
+
+- [ ] **3-B-1** 오브젝트 스토어(마켓) 기능 설계
+  - 저장된 오브젝트 카탈로그 UI (썸네일, 이름, placementType 표시)
+  - 사이드바에서 드래그앤드롭으로 씬에 배치
+  - 드롭 위치 기반 placementType 자동 판단 (바닥 근처 → floor, 벽 근처 → wall)
+- [ ] **3-B-2** 오브젝트 CRUD — placementType 포함 직렬화/역직렬화
+
+---
+
+#### 3-C. 지능형 공간 구성 및 최적화 — ⏳ 예정
+
+- [ ] **3-C-1** rapier (wasm 기반) 물리 엔진 연동
   - AABB 충돌 정밀화 → 물리적 밀어내기
-- [ ] **3-2** 인테리어 원칙 시각화
+- [ ] **3-C-2** 인테리어 원칙 시각화
   - 삼분할 가이드라인을 그리드에 오버레이
-- [ ] **3-3** InstancedMesh 최적화
+- [ ] **3-C-3** InstancedMesh 최적화
   - 동일 타입 오브젝트 50개 이상 시 자동 전환
   - 60FPS 유지 목표
