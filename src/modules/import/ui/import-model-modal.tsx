@@ -1,6 +1,7 @@
 "use client"
 
 import { MATERIAL_PRESETS } from "@/modules/import/domain/material-preset"
+import { useImportModel, ImportStatus } from "@/modules/import/hooks/use-import-model"
 import { MaterialPreset, PlacementType } from "@/shared/types"
 import {
   Button,
@@ -13,7 +14,7 @@ import {
   Label,
   Separator,
 } from "@/shared/ui"
-import { Upload } from "lucide-react"
+import { CheckCircle, Loader2, Upload, XCircle } from "lucide-react"
 import { useRef, useState } from "react"
 
 const PLACEMENT_OPTIONS: { type: PlacementType; label: string }[] = [
@@ -28,6 +29,15 @@ const COLOR_PALETTE = [
   "#e8e4dc", "#d0cfc8", "#b8b4ac", "#9c9890",
 ]
 
+const STATUS_LABEL: Record<ImportStatus, string> = {
+  idle:       "",
+  validating: "파일 검증 중...",
+  uploading:  "업로드 중...",
+  saving:     "저장 중...",
+  done:       "가져오기 완료!",
+  error:      "",
+}
+
 interface ImportModelModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -41,6 +51,9 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
   const [placementType, setPlacementType] = useState<PlacementType>("floor")
   const [materialPreset, setMaterialPreset] = useState<MaterialPreset>("matte")
   const [color, setColor] = useState("#e8ddd0")
+
+  const { status, error, importModel } = useImportModel()
+  const isProcessing = ["validating", "uploading", "saving"].includes(status)
 
   const handleFile = (file: File) => {
     setSelectedFile(file)
@@ -59,12 +72,16 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
     if (file) handleFile(file)
   }
 
-  const handleSubmit = () => {
-    // TODO: useImportModel 훅 연결 (기능 구현 단계)
-    console.log({ selectedFile, name, placementType, materialPreset, color })
+  const handleSubmit = async () => {
+    if (!selectedFile || !name) return
+    const result = await importModel({ file: selectedFile, name, placementType, materialPreset, color })
+    if (result) {
+      setTimeout(() => handleClose(false), 1200)
+    }
   }
 
   const handleClose = (open: boolean) => {
+    if (isProcessing) return
     if (!open) {
       setSelectedFile(null)
       setName("")
@@ -85,12 +102,13 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
         <div className="space-y-5">
           {/* 파일 드롭존 */}
           <div
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => !isProcessing && fileInputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={e => { e.preventDefault(); setIsDragOver(true) }}
             onDragLeave={() => setIsDragOver(false)}
             className={[
-              "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 cursor-pointer transition-colors",
+              "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors",
+              isProcessing ? "cursor-not-allowed opacity-60" : "cursor-pointer",
               isDragOver
                 ? "border-primary bg-primary/5"
                 : selectedFile
@@ -110,13 +128,7 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
                 <p className="text-xs text-muted-foreground">최대 50MB · GLB 형식만 지원</p>
               </>
             )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".glb"
-              className="hidden"
-              onChange={handleFileInput}
-            />
+            <input ref={fileInputRef} type="file" accept=".glb" className="hidden" onChange={handleFileInput} />
           </div>
 
           <Separator />
@@ -128,6 +140,7 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
               placeholder="오브젝트 이름을 입력하세요"
               value={name}
               onChange={e => setName(e.target.value)}
+              disabled={isProcessing}
             />
           </div>
 
@@ -139,8 +152,9 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
                 <button
                   key={type}
                   onClick={() => setPlacementType(type)}
+                  disabled={isProcessing}
                   className={[
-                    "flex-1 rounded-md border px-3 py-1.5 text-sm transition-colors",
+                    "flex-1 rounded-md border px-3 py-1.5 text-sm transition-colors disabled:opacity-50",
                     placementType === type
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-background text-muted-foreground hover:bg-muted border-input",
@@ -161,8 +175,9 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
                   <button
                     key={preset}
                     onClick={() => setMaterialPreset(preset)}
+                    disabled={isProcessing}
                     className={[
-                      "rounded-md border px-3 py-1.5 text-sm transition-colors",
+                      "rounded-md border px-3 py-1.5 text-sm transition-colors disabled:opacity-50",
                       materialPreset === preset
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-background text-muted-foreground hover:bg-muted border-input",
@@ -183,9 +198,10 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
                 <button
                   key={c}
                   onClick={() => setColor(c)}
+                  disabled={isProcessing}
                   style={{ backgroundColor: c }}
                   className={[
-                    "w-7 h-7 rounded-full border-2 transition-transform hover:scale-110",
+                    "w-7 h-7 rounded-full border-2 transition-transform hover:scale-110 disabled:opacity-50",
                     color === c ? "border-primary scale-110" : "border-transparent",
                   ].join(" ")}
                 />
@@ -194,18 +210,35 @@ export function ImportModelModal({ open, onOpenChange }: ImportModelModalProps) 
                 type="color"
                 value={color}
                 onChange={e => setColor(e.target.value)}
+                disabled={isProcessing}
                 className="w-7 h-7 rounded-full cursor-pointer border-2 border-muted-foreground/30 p-0.5"
                 title="직접 선택"
               />
             </div>
           </div>
+
+          {/* 진행 상태 피드백 */}
+          {status !== "idle" && (
+            <div className={[
+              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm",
+              status === "done"  ? "bg-green-500/10 text-green-600" :
+                status === "error" ? "bg-destructive/10 text-destructive" :
+                  "bg-muted text-muted-foreground",
+            ].join(" ")}>
+              {isProcessing && <Loader2 className="w-4 h-4 animate-spin shrink-0" />}
+              {status === "done"  && <CheckCircle className="w-4 h-4 shrink-0" />}
+              {status === "error" && <XCircle className="w-4 h-4 shrink-0" />}
+              <span>{status === "error" ? error : STATUS_LABEL[status]}</span>
+            </div>
+          )}
         </div>
 
         <DialogFooter className="mt-2">
-          <Button variant="outline" onClick={() => handleClose(false)}>
+          <Button variant="outline" onClick={() => handleClose(false)} disabled={isProcessing}>
             취소
           </Button>
-          <Button onClick={handleSubmit} disabled={!selectedFile || !name}>
+          <Button onClick={handleSubmit} disabled={!selectedFile || !name || isProcessing}>
+            {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
             가져오기
           </Button>
         </DialogFooter>
