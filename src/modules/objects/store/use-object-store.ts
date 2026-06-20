@@ -21,6 +21,7 @@ interface ObjectStoreState {
   addObject: (type: "box" | "sphere" | "cylinder", placementType?: PlacementType) => void
   addImportedObject: (info: Omit<ImportedObject3DInfo, "id">) => string
   addClonedObject: (source: SceneObject) => string
+  restoreObject: (obj: SceneObject) => void
   selectObject: (id: string | null) => void
   setHoveredObjectId: (id: string | null) => void
   setDragging: (id: string | null, startPos: { x: number; y: number; z: number } | null) => void
@@ -77,6 +78,15 @@ export const useObjectStore = create<ObjectStoreState>()(
         selectedObjectId: id,
       }))
       return id
+    },
+
+    restoreObject: obj => {
+      set(state => ({
+        objects: { ...state.objects, [obj.id]: obj },
+        objectIds: state.objectIds.includes(obj.id)
+          ? state.objectIds
+          : [...state.objectIds, obj.id],
+      }))
     },
 
     addClonedObject: source => {
