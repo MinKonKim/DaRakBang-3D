@@ -5,6 +5,7 @@ import { useUIStore } from "@/modules/editor/store/use-ui-store"
 import { ThreeEvent } from "@react-three/fiber"
 import React from "react"
 import { Box, Sphere, Cylinder } from "../objects/3d"
+import { ImportedObject } from "../objects/3d/imported-object"
 
 interface SceneObjectProps {
   objectId: string
@@ -65,8 +66,7 @@ export const SceneObject = ({ objectId, isSelected }: SceneObjectProps): React.R
   case "cylinder":
     return <Cylinder {...sharedProps} objectInfo={objectInfo} />
   case "imported":
-    // TODO: ImportedObject 렌더 컴포넌트 (Step 6에서 구현)
-    return null
+    return <ImportedObject {...sharedProps} objectInfo={objectInfo} />
   default:
     return null
   }
