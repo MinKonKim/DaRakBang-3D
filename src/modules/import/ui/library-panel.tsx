@@ -1,16 +1,11 @@
 "use client"
 
+import { commandManager } from "@/managers/command-manager"
+import { AddObjectCommand } from "@/managers/commands/add-object-command"
+import { useLibraryObjects, LibraryObject, ObjectStatus } from "@/modules/import/hooks/use-library-objects"
 import { Badge, Button, ScrollArea, Skeleton } from "@/shared/ui"
 import { Box, CheckCircle, Clock, Upload, XCircle } from "lucide-react"
-
-type ObjectStatus = "pending" | "approved" | "rejected"
-
-interface LibraryItem {
-  id: number
-  name: string
-  status: ObjectStatus
-  category: string
-}
+import { v4 as uuidv4 } from "uuid"
 
 const STATUS_CONFIG: Record<ObjectStatus, { label: string; icon: React.ReactNode; variant: "secondary" | "default" | "destructive" }> = {
   pending:  { label: "검토 중",  icon: <Clock className="w-3 h-3" />,       variant: "secondary" },
@@ -22,20 +17,31 @@ interface LibraryPanelProps {
   onImportClick: () => void
 }
 
-// TODO: 실제 데이터는 기능 구현 단계에서 연결
-const MOCK_ITEMS: LibraryItem[] = []
-
 export function LibraryPanel({ onImportClick }: LibraryPanelProps) {
-  const isLoading = false
+  const { objects, isLoading } = useLibraryObjects()
+
+  const handlePlace = (item: LibraryObject) => {
+    const obj = {
+      id: `imported_${uuidv4()}`,
+      name: item.name,
+      type: "imported" as const,
+      modelUrl: item.fileUrl,
+      originalFileName: item.originalFileName,
+      materialPreset: item.materialPreset,
+      placementType: item.placementType,
+      color: item.color,
+      position: { x: 0, y: 0.5, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      scale: { x: 1, y: 1, z: 1 },
+      visible: true,
+    }
+    commandManager.execute(new AddObjectCommand(obj))
+  }
 
   return (
     <div className="flex flex-col h-full">
       <div className="px-4 pb-3 shrink-0">
-        <Button
-          onClick={onImportClick}
-          size="sm"
-          className="w-full flex items-center gap-2"
-        >
+        <Button onClick={onImportClick} size="sm" className="w-full flex items-center gap-2">
           <Upload className="w-4 h-4" />
           오브젝트 가져오기
         </Button>
@@ -49,12 +55,12 @@ export function LibraryPanel({ onImportClick }: LibraryPanelProps) {
                 <Skeleton key={i} className="h-24 rounded-lg" />
               ))}
             </div>
-          ) : MOCK_ITEMS.length === 0 ? (
+          ) : objects.length === 0 ? (
             <EmptyState onImportClick={onImportClick} />
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {MOCK_ITEMS.map(item => (
-                <LibraryItemCard key={item.id} item={item} />
+              {objects.map(item => (
+                <LibraryItemCard key={item.id} item={item} onPlace={handlePlace} />
               ))}
             </div>
           )}
@@ -64,16 +70,22 @@ export function LibraryPanel({ onImportClick }: LibraryPanelProps) {
   )
 }
 
-function LibraryItemCard({ item }: { item: LibraryItem }) {
+function LibraryItemCard({ item, onPlace }: { item: LibraryObject; onPlace: (item: LibraryObject) => void }) {
   const { label, icon, variant } = STATUS_CONFIG[item.status]
+  const canPlace = item.status === "approved"
 
   return (
-    <button className="group flex flex-col rounded-lg border bg-card hover:bg-muted/40 transition-colors overflow-hidden text-left">
-      {/* 썸네일 영역 */}
+    <button
+      onClick={() => canPlace && onPlace(item)}
+      disabled={!canPlace}
+      className={[
+        "group flex flex-col rounded-lg border bg-card overflow-hidden text-left transition-colors",
+        canPlace ? "hover:bg-muted/40 cursor-pointer" : "opacity-60 cursor-not-allowed",
+      ].join(" ")}
+    >
       <div className="flex items-center justify-center h-20 bg-muted/30 w-full">
         <Box className="w-8 h-8 text-muted-foreground/40" />
       </div>
-
       <div className="p-2 space-y-1">
         <p className="text-xs font-medium truncate">{item.name}</p>
         <Badge variant={variant} className="flex items-center gap-1 w-fit text-[10px] px-1.5 py-0">
