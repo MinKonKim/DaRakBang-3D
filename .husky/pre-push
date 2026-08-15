@@ -1,1 +1,2 @@
+export PATH="$(ls -d "$HOME"/.nvm/versions/node/*/bin 2>/dev/null | sort -V | tail -1):$PATH"
 pnpm tsc --noEmit
