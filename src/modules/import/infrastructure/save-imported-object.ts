@@ -1,6 +1,3 @@
-"use server"
-
-import { createClient } from "@/shared/lib/supabase"
 import { MaterialPreset, PlacementType } from "@/shared/types"
 
 export interface SaveImportedObjectParams {
@@ -13,26 +10,14 @@ export interface SaveImportedObjectParams {
 }
 
 export async function saveImportedObject(params: SaveImportedObjectParams): Promise<number> {
-  const supabase = await createClient()
+  const res = await fetch("/api/objects", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  })
+  const body = await res.json()
 
-  const { data, error } = await supabase
-    .from("objects")
-    .insert({
-      name: params.name,
-      type: "imported",
-      category: params.placementType,
-      file_url: params.fileUrl,
-      data: {
-        originalFileName: params.originalFileName,
-        materialPreset: params.materialPreset,
-        color: params.color,
-      },
-      status: "pending",
-    })
-    .select("id")
-    .single()
+  if (!res.ok) throw new Error(body.error ?? "오브젝트 저장 실패")
 
-  if (error) throw new Error(`오브젝트 저장 실패: ${error.message}`)
-
-  return data.id
+  return body.objectId as number
 }
